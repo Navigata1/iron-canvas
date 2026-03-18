@@ -1,0 +1,2453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iron Canvas — Raw Ideas. Refined Experiences.</title>
+  <meta name="description" content="Iron Canvas is an AI-powered design studio that transforms digital presence into premium-grade experiences. We don't vibe-code. We engineer beauty." />
+  <meta property="og:title" content="Iron Canvas — Raw Ideas. Refined Experiences." />
+  <meta property="og:description" content="AI-powered design agency using the 7-phase Iron Canvas methodology to produce $50K-quality digital experiences." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0e14'/%3E%3Cpath d='M8 24 L16 8 L24 24' stroke='%23c9a84c' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='11' y1='18' x2='21' y2='18' stroke='%23c9a84c' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --base: #0a0e14;
+      --surface: #2a2d35;
+      --surface-2: #1a1d24;
+      --gold: #c9a84c;
+      --gold-dim: #9d7e38;
+      --gold-bright: #e2bf6a;
+      --text-primary: #f0ede8;
+      --text-secondary: #9a9490;
+      --text-dim: #5a5754;
+      --border: rgba(201, 168, 76, 0.12);
+      --border-hover: rgba(201, 168, 76, 0.45);
+      --spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --spring-slow: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--base);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ─── Grain Overlay (fixed, pointer-events none) ───────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.032;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ─── Typography ───────────────────────────────────────────── */
+    h1, h2, h3, h4, h5 {
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      font-weight: 800;
+      text-wrap: balance;
+    }
+
+    p {
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ─── Layout Containers ────────────────────────────────────── */
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 clamp(1.25rem, 4vw, 4rem);
+    }
+
+    /* ─── Skip Link (accessibility) ─────────────────────────────── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      background: var(--gold);
+      color: var(--base);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-weight: 600;
+      z-index: 10000;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* ─── Navigation ───────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1.25rem 0;
+      transition: background 0.4s var(--spring), backdrop-filter 0.4s var(--spring);
+    }
+
+    nav.scrolled {
+      background: rgba(10, 14, 20, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.125rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .nav-logo-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--gold);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-mark svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color 0.2s var(--spring);
+      letter-spacing: 0.01em;
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .nav-cta {
+      background: var(--gold);
+      color: var(--base) !important;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 600 !important;
+      font-size: 0.875rem;
+      transition: background 0.2s var(--spring), transform 0.15s var(--spring) !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold-bright) !important;
+      transform: translateY(-1px);
+    }
+
+    .nav-cta:active { transform: translateY(0) scale(0.98); }
+
+    @media (max-width: 767px) {
+      .nav-links { display: none; }
+    }
+
+    /* ─── Section Base ─────────────────────────────────────────── */
+    section {
+      position: relative;
+    }
+
+    /* ─── Reveal Animation ─────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s var(--spring), transform 0.8s var(--spring);
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+    .reveal-delay-6 { transition-delay: 0.6s; }
+
+    /* ─── Gold Label ───────────────────────────────────────────── */
+    .label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+
+    .label::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ─── ═══════════════════════════════════ ─── */
+    /* ─── HERO ─────────────────────────────────── */
+    /* ─── ═══════════════════════════════════ ─── */
+    #hero {
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding-top: 5rem;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ambient radial glow behind hero left */
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -10%;
+      width: 60%;
+      height: 80%;
+      background: radial-gradient(ellipse at center, rgba(201, 168, 76, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-left {
+      padding: 8rem clamp(2rem, 5vw, 6rem) 8rem clamp(1.25rem, 4vw, 4rem);
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s var(--spring) 0.2s forwards;
+    }
+
+    .hero-headline {
+      font-size: clamp(3.5rem, 7vw, 6.5rem);
+      font-weight: 900;
+      line-height: 0.97;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      animation: fadeUp 0.9s var(--spring) 0.35s forwards;
+    }
+
+    .hero-headline em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .hero-subline {
+      font-size: clamp(1rem, 1.4vw, 1.2rem);
+      line-height: 1.65;
+      color: var(--text-secondary);
+      max-width: 52ch;
+      margin-bottom: 2.75rem;
+      opacity: 0;
+      animation: fadeUp 0.9s var(--spring) 0.5s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s var(--spring) 0.65s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--gold);
+      color: var(--base);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.01em;
+      padding: 0.875rem 2rem;
+      border-radius: 8px;
+      transition: background 0.2s var(--spring), transform 0.15s var(--spring-slow), box-shadow 0.2s;
+      box-shadow: 0 0 0 0 rgba(201, 168, 76, 0);
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(201, 168, 76, 0.25);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: none;
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.875rem 0;
+      border-radius: 8px;
+      transition: color 0.2s var(--spring);
+      cursor: pointer;
+    }
+
+    .btn-ghost:hover { color: var(--text-primary); }
+
+    .btn-ghost svg {
+      transition: transform 0.2s var(--spring-slow);
+    }
+
+    .btn-ghost:hover svg { transform: translateX(4px); }
+
+    /* Hero right — abstract animated canvas */
+    .hero-right {
+      position: relative;
+      height: 100%;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-canvas-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      overflow: hidden;
+    }
+
+    /* Main orbiting element */
+    .iron-orb {
+      position: relative;
+      width: clamp(320px, 45vw, 520px);
+      height: clamp(320px, 45vw, 520px);
+      margin-left: -5%;
+    }
+
+    /* Outer ring */
+    .orb-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 168, 76, 0.15);
+      animation: orb-spin 18s linear infinite;
+    }
+
+    .orb-ring::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 12px var(--gold), 0 0 24px rgba(201, 168, 76, 0.5);
+    }
+
+    .orb-ring-2 {
+      position: absolute;
+      inset: 14%;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 168, 76, 0.08);
+      animation: orb-spin 28s linear infinite reverse;
+    }
+
+    .orb-ring-2::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 30%;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      box-shadow: 0 0 8px var(--gold-dim);
+    }
+
+    .orb-ring-3 {
+      position: absolute;
+      inset: 27%;
+      border-radius: 50%;
+      border: 1.5px solid rgba(201, 168, 76, 0.2);
+      animation: orb-spin 12s linear infinite;
+    }
+
+    /* Core hexagon */
+    .orb-core {
+      position: absolute;
+      inset: 33%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: orb-float 6s ease-in-out infinite;
+    }
+
+    .orb-hex {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--surface-2) 0%, #131820 50%, var(--surface-2) 100%);
+      clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Shimmer on hex */
+    .orb-hex::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 30%, rgba(201, 168, 76, 0.12) 50%, transparent 70%);
+      animation: hex-shimmer 4s ease-in-out infinite;
+    }
+
+    .orb-hex-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .orb-hex-inner svg {
+      width: 36px;
+      height: 36px;
+      opacity: 0.9;
+    }
+
+    /* Particles */
+    .orb-particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      animation: particle-drift var(--dur) ease-in-out var(--delay) infinite;
+    }
+
+    /* Iron texture bars (background) */
+    .iron-bars {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+      padding: 2rem 0;
+      opacity: 0.06;
+    }
+
+    .iron-bar {
+      height: 1.5px;
+      background: var(--gold);
+      border-radius: 1px;
+      animation: bar-pulse var(--dur) ease-in-out var(--delay) infinite;
+    }
+
+    /* Right panel gradient backdrop */
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 60% 40%, rgba(201, 168, 76, 0.05) 0%, transparent 60%),
+        linear-gradient(to right, var(--base) 0%, transparent 20%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-canvas-wrap { z-index: 2; }
+
+    /* Stats strip below hero left */
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      margin-top: 4rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.9s var(--spring) 0.8s forwards;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stat-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text-primary);
+    }
+
+    .stat-num span { color: var(--gold); }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    @media (max-width: 767px) {
+      #hero {
+        grid-template-columns: 1fr;
+        min-height: 100dvh;
+      }
+      .hero-right {
+        display: none;
+      }
+      .hero-left {
+        padding: 8rem 1.25rem 5rem;
+      }
+      .hero-headline {
+        font-size: clamp(3rem, 13vw, 4.5rem);
+      }
+    }
+
+    /* ─── ═══════════════════════════════════ ─── */
+    /* ─── PROBLEM SECTION ──────────────────────── */
+    /* ─── ═══════════════════════════════════ ─── */
+    #problem {
+      padding: 10rem 0;
+      background: var(--base);
+      position: relative;
+    }
+
+    #problem::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+      gap: clamp(4rem, 8vw, 10rem);
+      align-items: start;
+    }
+
+    .problem-text {}
+
+    .problem-headline {
+      font-size: clamp(2.4rem, 4.5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      margin: 1.5rem 0 2rem;
+      color: var(--text-primary);
+    }
+
+    .problem-headline em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .problem-body {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      max-width: 52ch;
+      margin-bottom: 2.5rem;
+    }
+
+    .problem-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+      padding: 1.75rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 4px;
+      max-width: 44ch;
+    }
+
+    .problem-stat-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      color: var(--gold);
+    }
+
+    .problem-stat-text {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Side-by-side comparison */
+    .problem-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding-top: 1rem;
+    }
+
+    .compare-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .compare-label.bad { color: var(--text-dim); }
+    .compare-label.good { color: var(--gold); }
+
+    .compare-card {
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Generic AI Site Mockup */
+    .compare-card.generic {
+      background: #18192a;
+      border: 1px solid rgba(120, 100, 200, 0.2);
+      padding: 1.5rem;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .generic-hero-bar {
+      width: 60%;
+      height: 14px;
+      background: linear-gradient(90deg, #7b5ea7, #5b8dee);
+      border-radius: 3px;
+      opacity: 0.7;
+    }
+
+    .generic-sub-bar {
+      width: 80%;
+      height: 8px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+    }
+
+    .generic-sub-bar-2 {
+      width: 65%;
+      height: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+    }
+
+    .generic-btn {
+      width: 100px;
+      height: 30px;
+      background: linear-gradient(90deg, #7b5ea7, #5b8dee);
+      border-radius: 20px;
+      margin-top: 0.25rem;
+    }
+
+    .generic-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: auto;
+    }
+
+    .generic-card {
+      height: 42px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(120, 100, 200, 0.15);
+      border-radius: 6px;
+    }
+
+    .generic-overlay {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(120, 100, 200, 0.02) 2px,
+        rgba(120, 100, 200, 0.02) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* Iron Canvas Mockup */
+    .compare-card.premium {
+      background: #0a0e14;
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      padding: 1.5rem;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .premium-label-bar {
+      width: 80px;
+      height: 5px;
+      background: var(--gold);
+      border-radius: 1px;
+      opacity: 0.8;
+    }
+
+    .premium-headline-bar {
+      width: 75%;
+      height: 20px;
+      background: rgba(240, 237, 232, 0.12);
+      border-radius: 3px;
+    }
+
+    .premium-headline-bar-2 {
+      width: 55%;
+      height: 20px;
+      background: rgba(240, 237, 232, 0.08);
+      border-radius: 3px;
+    }
+
+    .premium-sub {
+      width: 85%;
+      height: 6px;
+      background: rgba(154, 148, 144, 0.2);
+      border-radius: 2px;
+      margin-top: 0.25rem;
+    }
+
+    .premium-sub-2 {
+      width: 70%;
+      height: 6px;
+      background: rgba(154, 148, 144, 0.15);
+      border-radius: 2px;
+    }
+
+    .premium-btn {
+      width: 110px;
+      height: 30px;
+      background: var(--gold);
+      border-radius: 6px;
+      margin-top: auto;
+      opacity: 0.9;
+    }
+
+    .compare-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .compare-divider::before,
+    .compare-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    @media (max-width: 767px) {
+      .problem-grid {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+      }
+    }
+
+    /* ─── ═══════════════════════════════════ ─── */
+    /* ─── METHOD SECTION ───────────────────────── */
+    /* ─── ═══════════════════════════════════ ─── */
+    #method {
+      padding: 10rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #method::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    /* Large ambient number in background */
+    #method::after {
+      content: 'IC';
+      position: absolute;
+      right: -2%;
+      top: 10%;
+      font-family: 'Outfit', sans-serif;
+      font-size: 25vw;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      color: rgba(201, 168, 76, 0.02);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .method-header {
+      max-width: 600px;
+      margin-bottom: 6rem;
+    }
+
+    .method-headline {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin: 1.5rem 0 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .method-sub {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 48ch;
+    }
+
+    /* Phase list — editorial numbered */
+    .phases-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .phase-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 3rem;
+      padding: 3.5rem 0;
+      border-top: 1px solid var(--border);
+      position: relative;
+      transition: border-color 0.3s var(--spring);
+      cursor: default;
+    }
+
+    .phase-item:last-child { border-bottom: 1px solid var(--border); }
+
+    .phase-item:hover { border-color: rgba(201, 168, 76, 0.3); }
+
+    .phase-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: -1px;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.5s var(--spring);
+    }
+
+    .phase-item:hover::before { width: 100%; }
+
+    .phase-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(4rem, 7vw, 7rem);
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      line-height: 1;
+      color: rgba(201, 168, 76, 0.12);
+      transition: color 0.3s var(--spring);
+      padding-top: 0.25rem;
+      user-select: none;
+    }
+
+    .phase-item:hover .phase-num { color: rgba(201, 168, 76, 0.28); }
+
+    .phase-content {}
+
+    .phase-code {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.625rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .phase-code::after {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.5;
+    }
+
+    .phase-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .phase-desc {
+      font-size: 0.975rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      max-width: 55ch;
+    }
+
+    .phase-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.25rem 0.625rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+      margin-top: 1.25rem;
+    }
+
+    @media (max-width: 767px) {
+      .phase-item {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 2.5rem 0;
+      }
+      .phase-num {
+        font-size: 3.5rem;
+      }
+    }
+
+    /* ─── ═══════════════════════════════════ ─── */
+    /* ─── WHAT WE BUILD ────────────────────────── */
+    /* ─── ═══════════════════════════════════ ─── */
+    #builds {
+      padding: 10rem 0;
+      background: var(--surface-2);
+      position: relative;
+    }
+
+    #builds::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    .builds-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: end;
+      margin-bottom: 5rem;
+    }
+
+    .builds-headline {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.06;
+      margin-top: 1.5rem;
+    }
+
+    .builds-sub {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 42ch;
+      align-self: end;
+    }
+
+    /* Bento grid */
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+      gap: 1.25rem;
+    }
+
+    .bento-card {
+      background: var(--base);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2.25rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.35s var(--spring), transform 0.35s var(--spring), box-shadow 0.35s;
+      cursor: default;
+    }
+
+    .bento-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(201, 168, 76, 0.03) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.35s;
+      pointer-events: none;
+    }
+
+    .bento-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(201, 168, 76, 0.06);
+    }
+
+    .bento-card:hover::before { opacity: 1; }
+
+    /* Inner glass border */
+    .bento-card::after {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: 13px;
+      border: 1px solid rgba(255,255,255,0.03);
+      pointer-events: none;
+    }
+
+    /* card spans */
+    .bento-a { grid-column: span 7; }
+    .bento-b { grid-column: span 5; }
+    .bento-c { grid-column: span 4; }
+    .bento-d { grid-column: span 4; }
+    .bento-e { grid-column: span 4; }
+
+    .bento-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .bento-card:hover .bento-icon {
+      background: rgba(201, 168, 76, 0.1);
+      border-color: rgba(201, 168, 76, 0.3);
+    }
+
+    .bento-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .bento-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--text-primary);
+      margin-bottom: 0.625rem;
+    }
+
+    .bento-desc {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      max-width: 38ch;
+    }
+
+    /* Accent visual for first large card */
+    .bento-visual {
+      position: absolute;
+      right: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 140px;
+      height: 140px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .bento-visual-rings {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .bvr {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      animation: orb-spin 14s linear infinite;
+    }
+
+    .bvr-2 {
+      inset: 15%;
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      animation: orb-spin 22s linear infinite reverse;
+    }
+
+    .bvr-3 {
+      inset: 30%;
+      border: 1px solid rgba(201, 168, 76, 0.4);
+      animation: orb-spin 8s linear infinite;
+    }
+
+    .bvr-dot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 12px var(--gold);
+    }
+
+    @media (max-width: 1023px) {
+      .bento-a, .bento-b, .bento-c, .bento-d, .bento-e {
+        grid-column: span 6;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .bento-a, .bento-b, .bento-c, .bento-d, .bento-e {
+        grid-column: span 12;
+      }
+      .builds-header {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .bento-visual { display: none; }
+    }
+
+    /* ─── ═══════════════════════════════════ ─── */
+    /* ─── CASE STUDY ───────────────────────────── */
+    /* ─── ═══════════════════════════════════ ─── */
+    #case-study {
+      padding: 10rem 0;
+      position: relative;
+    }
+
+    #case-study::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(4rem, 8vw, 9rem);
+      align-items: center;
+    }
+
+    .case-label { margin-bottom: 2rem; }
+
+    .case-headline {
+      font-size: clamp(2.2rem, 4.5vw, 3.75rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.06;
+      margin-bottom: 1.5rem;
+    }
+
+    .case-desc {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      max-width: 48ch;
+      margin-bottom: 2.5rem;
+    }
+
+    .case-metrics {
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+
+    .case-metric {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .case-metric-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.25rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--gold);
+    }
+
+    .case-metric-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .case-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--gold);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.01em;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+      padding-bottom: 0.25rem;
+      transition: border-color 0.2s, gap 0.25s var(--spring-slow);
+    }
+
+    .case-cta:hover {
+      border-color: var(--gold);
+      gap: 0.875rem;
+    }
+
+    /* Case study visual — before/after */
+    .case-visual {
+      position: relative;
+    }
+
+    .case-card-wrap {
+      position: relative;
+    }
+
+    .case-card {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      position: relative;
+    }
+
+    .case-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.25rem;
+      background: var(--base);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-r { background: rgba(255, 95, 86, 0.5); }
+    .dot-y { background: rgba(255, 189, 46, 0.5); }
+    .dot-g { background: rgba(39, 201, 63, 0.5); }
+
+    .case-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--surface);
+      border-radius: 4px;
+      margin-left: 0.5rem;
+    }
+
+    .case-site-mock {
+      padding: 1.75rem;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Church Hub mock content */
+    .site-label-strip {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .site-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 6px var(--gold);
+    }
+
+    .site-label-text {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .site-headline-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .site-h {
+      height: 18px;
+      background: rgba(240, 237, 232, 0.12);
+      border-radius: 3px;
+    }
+
+    .site-h-2 {
+      height: 18px;
+      width: 75%;
+      background: rgba(240, 237, 232, 0.08);
+      border-radius: 3px;
+    }
+
+    .site-sub-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    .site-sub {
+      height: 7px;
+      background: rgba(154, 148, 144, 0.15);
+      border-radius: 2px;
+    }
+
+    .site-sub.w70 { width: 70%; }
+    .site-sub.w85 { width: 85%; }
+    .site-sub.w55 { width: 55%; }
+
+    .site-card-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.625rem;
+      margin-top: auto;
+    }
+
+    .site-mini-card {
+      height: 48px;
+      background: rgba(201, 168, 76, 0.06);
+      border: 1px solid rgba(201, 168, 76, 0.12);
+      border-radius: 6px;
+    }
+
+    /* Before card (grayed out, generic) */
+    .case-card.before-card {
+      opacity: 0.45;
+      transform: translateX(-16px) scale(0.95);
+      position: absolute;
+      top: 2rem;
+      left: -2rem;
+      right: 5rem;
+      z-index: 0;
+    }
+
+    .case-card.after-card {
+      position: relative;
+      z-index: 1;
+    }
+
+    .before-badge,
+    .after-badge {
+      position: absolute;
+      top: -12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.625rem;
+      border-radius: 4px;
+    }
+
+    .before-badge {
+      left: 1rem;
+      background: var(--surface);
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+    }
+
+    .after-badge {
+      right: 1rem;
+      background: rgba(201, 168, 76, 0.12);
+      color: var(--gold);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+    }
+
+    .case-card-wrap {
+      padding-top: 1.5rem;
+      padding-left: 2rem;
+    }
+
+    @media (max-width: 767px) {
+      .case-grid {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+      }
+    }
+
+    /* ─── ═══════════════════════════════════ ─── */
+    /* ─── ARSENAL / MARQUEE ────────────────────── */
+    /* ─── ═══════════════════════════════════ ─── */
+    #arsenal {
+      padding: 10rem 0;
+      background: var(--surface-2);
+      overflow: hidden;
+      position: relative;
+    }
+
+    #arsenal::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    .arsenal-header {
+      text-align: left;
+      max-width: 700px;
+      margin-bottom: 5rem;
+    }
+
+    .arsenal-headline {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.06;
+      margin: 1.5rem 0 1.25rem;
+    }
+
+    .arsenal-sub {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 48ch;
+    }
+
+    /* Marquee track */
+    .marquee-wrapper {
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Fade edges */
+    .marquee-wrapper::before,
+    .marquee-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 120px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .marquee-wrapper::before {
+      left: 0;
+      background: linear-gradient(to right, var(--surface-2), transparent);
+    }
+
+    .marquee-wrapper::after {
+      right: 0;
+      background: linear-gradient(to left, var(--surface-2), transparent);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 1.25rem;
+      width: max-content;
+      animation: marquee-scroll 30s linear infinite;
+    }
+
+    .marquee-track-reverse {
+      animation: marquee-scroll-reverse 36s linear infinite;
+    }
+
+    .marquee-item {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      background: var(--base);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.875rem 1.5rem;
+      white-space: nowrap;
+      transition: border-color 0.3s var(--spring);
+      cursor: default;
+    }
+
+    .marquee-item:hover { border-color: var(--border-hover); }
+
+    .marquee-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+      box-shadow: 0 0 8px rgba(201, 168, 76, 0.5);
+    }
+
+    .marquee-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+    }
+
+    .marquee-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(201, 168, 76, 0.1);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 3px;
+      padding: 0.15rem 0.4rem;
+    }
+
+    /* ─── ═══════════════════════════════════ ─── */
+    /* ─── CTA / CONTACT ────────────────────────── */
+    /* ─── ═══════════════════════════════════ ─── */
+    #contact {
+      padding: 12rem 0 8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #contact::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    /* Ambient glow */
+    .contact-glow {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(ellipse at center, rgba(201, 168, 76, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+    }
+
+    .contact-headline {
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.02;
+      margin: 1.5rem 0 2rem;
+    }
+
+    .contact-headline em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .contact-sub {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 52ch;
+      margin-bottom: 3rem;
+    }
+
+    .contact-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.875rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.25s var(--spring), color 0.25s, transform 0.2s var(--spring);
+    }
+
+    .contact-email:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+    }
+
+    .contact-email svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    /* ─── Footer ───────────────────────────────────────────────── */
+    footer {
+      padding: 3rem 0;
+      border-top: 1px solid var(--border);
+      position: relative;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-brand {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .footer-parent {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      font-weight: 400;
+    }
+
+    .footer-verse {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-style: italic;
+      max-width: 52ch;
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    .footer-verse strong {
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+
+    @media (max-width: 767px) {
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .footer-verse { text-align: left; }
+    }
+
+    /* ─── Keyframe Animations ──────────────────────────────────── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes orb-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes orb-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @keyframes hex-shimmer {
+      0%, 100% { opacity: 0; transform: translateX(-100%) rotate(45deg); }
+      50% { opacity: 1; transform: translateX(100%) rotate(45deg); }
+    }
+
+    @keyframes particle-drift {
+      0% { opacity: 0; transform: translate(0, 0) scale(0); }
+      20% { opacity: 0.8; }
+      80% { opacity: 0.4; }
+      100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.3); }
+    }
+
+    @keyframes bar-pulse {
+      0%, 100% { opacity: var(--base-op, 1); transform: scaleX(1); }
+      50% { opacity: calc(var(--base-op, 1) * 0.4); transform: scaleX(var(--scale, 0.7)); }
+    }
+
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes marquee-scroll-reverse {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0); }
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      .orb-ring, .orb-ring-2, .orb-ring-3 { animation: none; }
+      .orb-core { animation: none; }
+      .orb-hex::before { animation: none; }
+      .marquee-track, .marquee-track-reverse { animation: none; }
+      .bvr, .bvr-2, .bvr-3 { animation: none; }
+      .reveal { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- ─── NAV ─────────────────────────────────────────────────── -->
+  <nav id="nav" aria-label="Primary navigation">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#hero" class="nav-logo" aria-label="Iron Canvas home">
+          <div class="nav-logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 13L8 3L13 13" stroke="#0a0e14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="5" y1="9.5" x2="11" y2="9.5" stroke="#0a0e14" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          Iron Canvas
+        </a>
+
+        <ul class="nav-links" role="list">
+          <li><a href="#method">Method</a></li>
+          <li><a href="#builds">Services</a></li>
+          <li><a href="#case-study">Work</a></li>
+          <li><a href="#arsenal">Tools</a></li>
+          <li><a href="#contact" class="nav-cta">Start a Project</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+
+    <!-- ─── HERO ─────────────────────────────────────────────── -->
+    <section id="hero" aria-label="Hero">
+
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <span class="label">AI Design Studio</span>
+        </div>
+
+        <h1 class="hero-headline">
+          Raw <em>Ideas.</em><br>
+          Refined<br>
+          Experiences.
+        </h1>
+
+        <p class="hero-subline">
+          Iron Canvas is an AI-powered design studio that transforms digital presence into premium-grade experiences. We don't vibe-code. We engineer beauty.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#method" class="btn-primary">
+            See Our Method
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="#case-study" class="btn-ghost">
+            View Work
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="hero-stats" aria-label="Studio statistics">
+          <div class="stat-item">
+            <div class="stat-num">7<span>—</span></div>
+            <div class="stat-label">Phase Methodology</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">3<span>+</span></div>
+            <div class="stat-label">AI Engines</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">$<span>0</span></div>
+            <div class="stat-label">Generic Output</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right" aria-hidden="true">
+        <div class="hero-canvas-wrap">
+          <div class="iron-orb">
+            <div class="orb-ring"></div>
+            <div class="orb-ring orb-ring-2"></div>
+            <div class="orb-ring orb-ring-3"></div>
+
+            <!-- Particles -->
+            <div class="orb-particle" style="--tx:60px;--ty:-80px;--dur:3.2s;--delay:0s;top:30%;left:60%;"></div>
+            <div class="orb-particle" style="--tx:-70px;--ty:50px;--dur:4.1s;--delay:0.8s;top:60%;left:30%;"></div>
+            <div class="orb-particle" style="--tx:40px;--ty:70px;--dur:3.7s;--delay:1.5s;top:20%;left:45%;"></div>
+            <div class="orb-particle" style="--tx:-50px;--ty:-60px;--dur:4.5s;--delay:2.2s;top:70%;left:55%;"></div>
+            <div class="orb-particle" style="--tx:80px;--ty:30px;--dur:3.9s;--delay:0.4s;top:45%;left:20%;"></div>
+            <div class="orb-particle" style="--tx:-35px;--ty:-85px;--dur:4.3s;--delay:1.1s;top:55%;left:75%;"></div>
+
+            <div class="orb-core">
+              <div class="orb-hex">
+                <div class="orb-hex-inner">
+                  <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 28L18 8L29 28" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="11" y1="21" x2="25" y2="21" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Iron texture bars -->
+          <div class="iron-bars" aria-hidden="true">
+            <!-- generated by JS for DRY-ness -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ─── PROBLEM ───────────────────────────────────────────── -->
+    <section id="problem" aria-label="The problem with AI sites">
+      <div class="container">
+        <div class="problem-grid">
+
+          <div class="problem-text">
+            <div class="label reveal">The Problem</div>
+            <h2 class="problem-headline reveal reveal-delay-1">
+              Every <em>AI site</em><br>looks identical.
+            </h2>
+            <p class="problem-body reveal reveal-delay-2">
+              Generic gradients. Centered heroes. Three equal cards. Inter font. Purple glow. Your customers can tell — and they leave. The rise of AI-assisted design has created a paradox: more websites than ever before, fewer that actually stand out.
+            </p>
+            <div class="problem-stat reveal reveal-delay-3">
+              <div class="problem-stat-num">91%</div>
+              <div class="problem-stat-text">of websites built with AI tools look indistinguishable from each other — industry observation, 2025</div>
+            </div>
+          </div>
+
+          <div class="problem-visual reveal reveal-delay-2">
+            <div class="compare-label bad">Generic AI Output</div>
+            <div class="compare-card generic" role="img" aria-label="Example of generic AI-generated website with purple gradients and three equal cards">
+              <div class="generic-hero-bar"></div>
+              <div class="generic-sub-bar"></div>
+              <div class="generic-sub-bar-2"></div>
+              <div class="generic-btn"></div>
+              <div class="generic-cards">
+                <div class="generic-card"></div>
+                <div class="generic-card"></div>
+                <div class="generic-card"></div>
+              </div>
+              <div class="generic-overlay"></div>
+            </div>
+
+            <div class="compare-divider">vs</div>
+
+            <div class="compare-label good">Iron Canvas Output</div>
+            <div class="compare-card premium" role="img" aria-label="Example of Iron Canvas premium design with gold accents and editorial layout">
+              <div class="premium-label-bar"></div>
+              <div class="premium-headline-bar"></div>
+              <div class="premium-headline-bar-2"></div>
+              <div class="premium-sub"></div>
+              <div class="premium-sub-2"></div>
+              <div class="premium-btn"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── METHOD ───────────────────────────────────────────── -->
+    <section id="method" aria-label="The Iron Canvas 7-phase method">
+      <div class="container">
+
+        <div class="method-header">
+          <div class="label reveal">The Iron Canvas Method</div>
+          <h2 class="method-headline reveal reveal-delay-1">Seven phases.<br>Zero shortcuts.</h2>
+          <p class="method-sub reveal reveal-delay-2">
+            A systematic, repeatable process for producing professional-grade digital experiences. Every phase exists for a reason. Every output is intentional.
+          </p>
+        </div>
+
+        <ol class="phases-list" aria-label="The 7 phases of the Iron Canvas method">
+
+          <li class="phase-item reveal">
+            <div class="phase-num" aria-hidden="true">01</div>
+            <div class="phase-content">
+              <div class="phase-code">Feel</div>
+              <h3 class="phase-title">Define the Emotional Target</h3>
+              <p class="phase-desc">Before a single pixel exists, we answer one question: how should your audience feel when they arrive? This anchors every downstream decision — from color temperature to font weight to motion speed. A feel brief is not a mood board. It's a lens.</p>
+              <div class="phase-tag">Foundation Phase</div>
+            </div>
+          </li>
+
+          <li class="phase-item reveal reveal-delay-1">
+            <div class="phase-num" aria-hidden="true">02</div>
+            <div class="phase-content">
+              <div class="phase-code">Collect</div>
+              <h3 class="phase-title">Mood Board + References</h3>
+              <p class="phase-desc">We draw from Cosmos, Godly, Awwwards, and Dribbble — not Pinterest boards. Ten to twenty curated references become two anchor images: the single visual that defines the product's soul. Reference extraction, not inspiration scrolling.</p>
+              <div class="phase-tag">Research Phase</div>
+            </div>
+          </li>
+
+          <li class="phase-item reveal reveal-delay-2">
+            <div class="phase-num" aria-hidden="true">03</div>
+            <div class="phase-content">
+              <div class="phase-code">Forge</div>
+              <h3 class="phase-title">Structural Design</h3>
+              <p class="phase-desc">Layout, typography, motion, and interaction architecture come together here. We use asymmetric grids, spring physics, and IntersectionObserver scroll reveals. No centered heroes. No three equal cards. The skeleton must be interesting before the skin goes on.</p>
+              <div class="phase-tag">Design Phase</div>
+            </div>
+          </li>
+
+          <li class="phase-item reveal reveal-delay-3">
+            <div class="phase-num" aria-hidden="true">04</div>
+            <div class="phase-content">
+              <div class="phase-code">Generate</div>
+              <h3 class="phase-title">AI Artifact Creation</h3>
+              <p class="phase-desc">We command Leonardo.ai (Kino XL, 3D Animation, Lucid Origin), OpenAI GPT Image 1.5, and Gemini 3 Pro (Nano Banana) to produce precision artifacts. Not stock photo replacements — purpose-built visuals generated at exact dimensions, with controlled lighting and palette consistency across the entire set.</p>
+              <div class="phase-tag">Generation Phase</div>
+            </div>
+          </li>
+
+          <li class="phase-item reveal reveal-delay-4">
+            <div class="phase-num" aria-hidden="true">05</div>
+            <div class="phase-content">
+              <div class="phase-code">Compose</div>
+              <h3 class="phase-title">Integration + Optimization</h3>
+              <p class="phase-desc">Artifacts meet structure. Every image receives overlay gradients, blend modes, and CSS animations — Ken Burns zooms, floating parallax, subtle entrance reveals. Images are converted, compressed, and given absolute paths for clean production deployments.</p>
+              <div class="phase-tag">Integration Phase</div>
+            </div>
+          </li>
+
+          <li class="phase-item reveal reveal-delay-5">
+            <div class="phase-num" aria-hidden="true">06</div>
+            <div class="phase-content">
+              <div class="phase-code">Refine</div>
+              <h3 class="phase-title">Iterative Polish Loop</h3>
+              <p class="phase-desc">Look. React. Describe. Fix. Look again. This loop runs until every pixel earns its place. We review on mobile and desktop. We check spacing at 2am on a dim screen. We apply the quality checklist — every interactive state, every shadow tint, every orphaned word.</p>
+              <div class="phase-tag">Polish Phase</div>
+            </div>
+          </li>
+
+          <li class="phase-item reveal">
+            <div class="phase-num" aria-hidden="true">07</div>
+            <div class="phase-content">
+              <div class="phase-code">Deploy</div>
+              <h3 class="phase-title">Staging to Production Pipeline</h3>
+              <p class="phase-desc">Staging preview first, always. After approval, production push. Vercel deployment with correct trailing-slash configuration, absolute image paths, and branching discipline. You get a live URL you're proud to share — not one you quietly hope nobody visits on mobile.</p>
+              <div class="phase-tag">Delivery Phase</div>
+            </div>
+          </li>
+
+        </ol>
+
+      </div>
+    </section>
+
+    <!-- ─── WHAT WE BUILD ─────────────────────────────────────── -->
+    <section id="builds" aria-label="What we build">
+      <div class="container">
+
+        <div class="builds-header">
+          <div>
+            <div class="label reveal">Services</div>
+            <h2 class="builds-headline reveal reveal-delay-1">
+              What we<br>build for you.
+            </h2>
+          </div>
+          <p class="builds-sub reveal reveal-delay-2">
+            Every engagement applies the full Iron Canvas method. The deliverable format changes. The standard never does.
+          </p>
+        </div>
+
+        <div class="bento" role="list">
+
+          <!-- Card A: Website Redesign (large) -->
+          <article class="bento-card bento-a reveal" role="listitem">
+            <div class="bento-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+            </div>
+            <h3 class="bento-title">Website Redesigns</h3>
+            <p class="bento-desc">Transform your existing web presence into something your competitors study. Full Iron Canvas treatment — feel, structure, artifacts, and polish.</p>
+            <div class="bento-visual" aria-hidden="true">
+              <div class="bento-visual-rings">
+                <div class="bvr"></div>
+                <div class="bvr bvr-2"></div>
+                <div class="bvr bvr-3"></div>
+                <div class="bvr-dot"></div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card B: Landing pages -->
+          <article class="bento-card bento-b reveal reveal-delay-1" role="listitem">
+            <div class="bento-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+                <path d="M2 17L12 22L22 17"/>
+                <path d="M2 12L12 17L22 12"/>
+              </svg>
+            </div>
+            <h3 class="bento-title">Landing Pages</h3>
+            <p class="bento-desc">Marketing pages and campaign destinations engineered for conversion and visual impact. Every scroll is intentional.</p>
+          </article>
+
+          <!-- Card C: Dashboards -->
+          <article class="bento-card bento-c reveal reveal-delay-2" role="listitem">
+            <div class="bento-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                <rect x="14" y="14" width="7" height="7" rx="1"/>
+              </svg>
+            </div>
+            <h3 class="bento-title">Dashboards & App UI</h3>
+            <p class="bento-desc">Data interfaces and application UIs that inform without overwhelming. Premium density done right.</p>
+          </article>
+
+          <!-- Card D: Brand identity -->
+          <article class="bento-card bento-d reveal reveal-delay-3" role="listitem">
+            <div class="bento-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+              </svg>
+            </div>
+            <h3 class="bento-title">Brand Identity</h3>
+            <p class="bento-desc">Visual systems — typography, color, iconography, and motion language — that hold together across every surface.</p>
+          </article>
+
+          <!-- Card E: AI artifact pipelines -->
+          <article class="bento-card bento-e reveal reveal-delay-4" role="listitem">
+            <div class="bento-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <h3 class="bento-title">AI Artifact Pipelines</h3>
+            <p class="bento-desc">Systematic visual generation using Leonardo, OpenAI, and Gemini. Consistent sets of artifacts — not one-off generations.</p>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── CASE STUDY ────────────────────────────────────────── -->
+    <section id="case-study" aria-label="Case study: Oakwood AI Hub">
+      <div class="container">
+        <div class="case-grid">
+
+          <div class="case-text">
+            <div class="label case-label reveal">Case Study</div>
+            <h2 class="case-headline reveal reveal-delay-1">
+              One hub.<br>Eight initiatives.<br>Zero compromise.
+            </h2>
+            <p class="case-desc reveal reveal-delay-2">
+              Oakwood Church came to us with eight separate technology initiatives living in disconnected siloes. We unified them under a single premium digital hub — one coherent visual language, one navigation system, one experience that made complexity feel simple.
+            </p>
+            <div class="case-metrics reveal reveal-delay-3" aria-label="Project metrics">
+              <div class="case-metric">
+                <div class="case-metric-num">8</div>
+                <div class="case-metric-label">Initiatives unified</div>
+              </div>
+              <div class="case-metric">
+                <div class="case-metric-num">1</div>
+                <div class="case-metric-label">Coherent hub</div>
+              </div>
+              <div class="case-metric">
+                <div class="case-metric-num">7</div>
+                <div class="case-metric-label">Phases applied</div>
+              </div>
+            </div>
+            <a href="https://oakwood-ai-hub.vercel.app" target="_blank" rel="noopener noreferrer" class="case-cta reveal reveal-delay-4">
+              View live project
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+
+          <div class="case-visual reveal reveal-delay-2">
+            <div class="case-card-wrap">
+              <!-- Before card (behind) -->
+              <div class="case-card before-card" aria-hidden="true" role="img" aria-label="Before: generic disconnected site">
+                <div class="before-badge">Before</div>
+                <div class="case-card-header">
+                  <div class="dot dot-r"></div>
+                  <div class="dot dot-y"></div>
+                  <div class="dot dot-g"></div>
+                  <div class="case-bar"></div>
+                </div>
+                <div class="case-site-mock" style="min-height:200px;">
+                  <div style="height:10px;width:55%;background:rgba(120,100,200,0.3);border-radius:2px;"></div>
+                  <div style="height:16px;width:70%;background:rgba(255,255,255,0.08);border-radius:3px;"></div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;margin-top:auto;">
+                    <div style="height:40px;background:rgba(120,100,200,0.1);border-radius:4px;border:1px solid rgba(120,100,200,0.15);"></div>
+                    <div style="height:40px;background:rgba(120,100,200,0.1);border-radius:4px;border:1px solid rgba(120,100,200,0.15);"></div>
+                    <div style="height:40px;background:rgba(120,100,200,0.1);border-radius:4px;border:1px solid rgba(120,100,200,0.15);"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- After card (front) -->
+              <div class="case-card after-card" role="img" aria-label="After: Iron Canvas premium Oakwood AI Hub">
+                <div class="after-badge">After — Iron Canvas</div>
+                <div class="case-card-header">
+                  <div class="dot dot-r"></div>
+                  <div class="dot dot-y"></div>
+                  <div class="dot dot-g"></div>
+                  <div class="case-bar"></div>
+                </div>
+                <div class="case-site-mock">
+                  <div class="site-label-strip">
+                    <div class="site-dot"></div>
+                    <div class="site-label-text">Oakwood AI Hub</div>
+                  </div>
+                  <div class="site-headline-block">
+                    <div class="site-h"></div>
+                    <div class="site-h-2"></div>
+                  </div>
+                  <div class="site-sub-block">
+                    <div class="site-sub w85"></div>
+                    <div class="site-sub w70"></div>
+                    <div class="site-sub w55"></div>
+                  </div>
+                  <div class="site-card-row">
+                    <div class="site-mini-card"></div>
+                    <div class="site-mini-card"></div>
+                    <div class="site-mini-card"></div>
+                    <div class="site-mini-card"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ARSENAL ───────────────────────────────────────────── -->
+    <section id="arsenal" aria-label="Our tool arsenal">
+      <div class="container">
+        <div class="arsenal-header">
+          <div class="label reveal">The Arsenal</div>
+          <h2 class="arsenal-headline reveal reveal-delay-1">
+            We command the most powerful generation engines on the planet.
+          </h2>
+          <p class="arsenal-sub reveal reveal-delay-2">
+            The Iron Canvas method is only as good as its tools. We run the top AI image engines plus a proprietary methodology layer that turns raw generation into refined artifact sets.
+          </p>
+        </div>
+      </div>
+
+      <!-- Marquee row 1 -->
+      <div class="marquee-wrapper" aria-hidden="true">
+        <div class="marquee-track" aria-label="Tool names">
+          <!-- Duplicated for seamless loop -->
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Leonardo.ai</span><span class="marquee-badge">Kino XL</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">OpenAI</span><span class="marquee-badge">GPT Image 1.5</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Gemini 3 Pro</span><span class="marquee-badge">Nano Banana</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Leonardo.ai</span><span class="marquee-badge">3D Animation</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Leonardo.ai</span><span class="marquee-badge">Lucid Origin</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Iron Canvas</span><span class="marquee-badge">Taste Skill</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Iron Canvas</span><span class="marquee-badge">Redesign Protocol</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Claude Code</span><span class="marquee-badge">Frontend</span></div>
+          <!-- Duplicate set -->
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Leonardo.ai</span><span class="marquee-badge">Kino XL</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">OpenAI</span><span class="marquee-badge">GPT Image 1.5</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Gemini 3 Pro</span><span class="marquee-badge">Nano Banana</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Leonardo.ai</span><span class="marquee-badge">3D Animation</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Leonardo.ai</span><span class="marquee-badge">Lucid Origin</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Iron Canvas</span><span class="marquee-badge">Taste Skill</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Iron Canvas</span><span class="marquee-badge">Redesign Protocol</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Claude Code</span><span class="marquee-badge">Frontend</span></div>
+        </div>
+      </div>
+
+      <!-- Marquee row 2 (reverse) -->
+      <div class="marquee-wrapper" aria-hidden="true">
+        <div class="marquee-track marquee-track-reverse">
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Vercel</span><span class="marquee-badge">Deploy</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Godly</span><span class="marquee-badge">Reference</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Awwwards</span><span class="marquee-badge">Inspiration</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Cosmos</span><span class="marquee-badge">Mood Board</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">21st.dev</span><span class="marquee-badge">Components</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Outfit</span><span class="marquee-badge">Typography</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">DM Sans</span><span class="marquee-badge">Body Type</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">CSS Spring</span><span class="marquee-badge">Motion</span></div>
+          <!-- Duplicate set -->
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Vercel</span><span class="marquee-badge">Deploy</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Godly</span><span class="marquee-badge">Reference</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Awwwards</span><span class="marquee-badge">Inspiration</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Cosmos</span><span class="marquee-badge">Mood Board</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">21st.dev</span><span class="marquee-badge">Components</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">Outfit</span><span class="marquee-badge">Typography</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">DM Sans</span><span class="marquee-badge">Body Type</span></div>
+          <div class="marquee-item"><div class="marquee-dot"></div><span class="marquee-text">CSS Spring</span><span class="marquee-badge">Motion</span></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ─── CTA / CONTACT ─────────────────────────────────────── -->
+    <section id="contact" aria-label="Start a project">
+      <div class="contact-glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="contact-inner">
+          <div class="label reveal">Start a Project</div>
+          <h2 class="contact-headline reveal reveal-delay-1">
+            Ready to transform your<br><em>digital presence?</em>
+          </h2>
+          <p class="contact-sub reveal reveal-delay-2">
+            Tell us about your project. We apply the full Iron Canvas method — from feel brief to deployed production. No templates. No shortcuts. No AI slop.
+          </p>
+          <div class="contact-actions reveal reveal-delay-3">
+            <a href="mailto:contact@islanddevcrew.com" class="btn-primary">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <rect x="2" y="4" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M2 5.5L8 9.5L14 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              contact@islanddevcrew.com
+            </a>
+            <a href="https://oakwood-ai-hub.vercel.app" target="_blank" rel="noopener noreferrer" class="contact-email">
+              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2ZM7 5.5C7 5.22 7.22 5 7.5 5h1C8.78 5 9 5.22 9 5.5v.25c0 .28-.22.5-.5.5h-1A.5.5 0 0 1 7 5.75V5.5ZM7 8a1 1 0 1 1 2 0v2.5a.5.5 0 0 1-1 0V8Z" stroke="currentColor" stroke-width="0" fill="currentColor" opacity="0.7"/>
+              </svg>
+              See live work
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── FOOTER ───────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <div class="footer-brand">Iron Canvas</div>
+          <div class="footer-parent">An Island Development Crew studio &mdash; &copy; 2025</div>
+        </div>
+        <blockquote class="footer-verse">
+          <p>"Where there is no vision, the people perish."</p>
+          <footer><strong>Proverbs 29:18</strong> &mdash; KJV</footer>
+        </blockquote>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ─── Nav scroll behavior ──────────────────────────────────────
+    (function() {
+      var nav = document.getElementById('nav');
+      function onScroll() {
+        if (window.scrollY > 40) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+
+    // ─── Intersection Observer — scroll reveals ───────────────────
+    (function() {
+      var reveals = document.querySelectorAll('.reveal');
+      if (!reveals.length) return;
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      reveals.forEach(function(el) {
+        observer.observe(el);
+      });
+    })();
+
+    // ─── Iron bars generator ──────────────────────────────────────
+    (function() {
+      var container = document.querySelector('.iron-bars');
+      if (!container) return;
+      var count = 32;
+      for (var i = 0; i < count; i++) {
+        var bar = document.createElement('div');
+        bar.className = 'iron-bar';
+        var widthPct = 40 + Math.random() * 60;
+        var delay = (Math.random() * 3).toFixed(2);
+        var dur = (2 + Math.random() * 3).toFixed(2);
+        var scale = (0.5 + Math.random() * 0.5).toFixed(2);
+        bar.style.cssText = 'width:' + widthPct + '%;--dur:' + dur + 's;--delay:' + delay + 's;--scale:' + scale + ';--base-op:' + (0.3 + Math.random() * 0.7).toFixed(2) + ';';
+        container.appendChild(bar);
+      }
+    })();
+
+    // ─── Magnetic hover on primary buttons ───────────────────────
+    (function() {
+      var btns = document.querySelectorAll('.btn-primary, .nav-cta');
+      btns.forEach(function(btn) {
+        btn.addEventListener('mousemove', function(e) {
+          var rect = btn.getBoundingClientRect();
+          var cx = rect.left + rect.width / 2;
+          var cy = rect.top + rect.height / 2;
+          var dx = (e.clientX - cx) * 0.22;
+          var dy = (e.clientY - cy) * 0.22;
+          btn.style.transform = 'translate(' + dx + 'px, ' + dy + 'px) translateY(-2px)';
+        });
+        btn.addEventListener('mouseleave', function() {
+          btn.style.transform = '';
+        });
+      });
+    })();
+
+    // ─── Smooth scroll anchors ────────────────────────────────────
+    (function() {
+      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+          var target = document.querySelector(anchor.getAttribute('href'));
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
