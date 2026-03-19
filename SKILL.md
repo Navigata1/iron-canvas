@@ -1667,3 +1667,62 @@ iron_canvas_output/
 *Iron Canvas Master Skill v3.0 — Island Development Crew*
 *"Enhancement means amplifying what's already good, not replacing it with a uniform style."*
 *"Where there is no vision, the people perish." — Proverbs 29:18 (KJV)*
+
+## § MANDATORY EXECUTION STANDARDS (Added 2026-03-19)
+
+### Leonardo AI Dashboard — MANDATORY for Phase 5
+
+Iron Canvas Phase 5 MUST include Leonardo AI Blueprint workflows when image generation is needed.
+
+**Execution:** The agent MUST open Chrome and navigate to app.leonardo.ai to:
+1. Use **Product Studio Photoshoot** for hero images and product angles
+2. Use **Style Transfer** to match generated images to the site's DNA palette
+3. Use **Custom Relight** for cross-frame lighting consistency
+4. Use **Product Spin Video** for 360° sequences → extract frames with ffmpeg
+5. Use **Background Change** to match section-specific contexts
+
+**How to access:**
+```
+browser(action="open", url="https://app.leonardo.ai", profile="user")
+browser(action="navigate", url="https://app.leonardo.ai/ai-generations")
+```
+
+The agent has full computer access. Chrome must be opened by the agent, not the user.
+Leonardo AI is not optional — it is part of the standard Phase 5 pipeline alongside Nano Banana Pro.
+
+### World-Class Reference Standard — Automotive Luxury
+
+For product showcase sites (Type D), the reference standard is NOT generic e-commerce.
+The standard is:
+
+**MANDATORY RESEARCH TARGETS:**
+- **Porsche** (porsche.com) — configurator, 360° views, color/trim selection
+- **Lamborghini** (lamborghini.com) — dramatic heroes, immersive scroll, product storytelling
+- **Ferrari** (ferrari.com) — editorial luxury, configurator, lifestyle integration
+- **Koenigsegg** (koenigsegg.com) — extreme premium, bespoke configurator, engineering porn
+
+**What to extract from these sites:**
+1. Product configurator patterns (select variant → live visual update)
+2. Hero image treatments (full-bleed, parallax, atmospheric)
+3. Color/variant selector UX (how they handle multiple options elegantly)
+4. Scroll-driven product reveals (how they unfold the product story)
+5. Material/texture close-up sections
+6. The "build your own" interactive experience
+
+**For Crown Collection specifically:**
+The site should have a scent/size selector that functions like a car configurator:
+- Select scent → jar label updates, background atmosphere changes, scent notes animate in
+- Select size → jar scales proportionally, price updates with counter animation
+- "Build Your Crown" interactive experience — not just a shop page with cards
+
+### No-Image Sites Are Phase 5 FAILURES
+
+If Phase 1 STUDY reveals a site with ZERO images (like Crown Collection), Phase 5 is the
+HIGHEST PRIORITY phase. The agent must:
+1. Generate hero imagery from the site's content (transcripts, copy, brand story)
+2. Generate product photography (from descriptions if no real photos exist)
+3. Generate atmospheric/lifestyle images for each section that currently uses CSS-only backgrounds
+4. Generate scent/variant-specific imagery
+5. Build scroll-sequence frames if the product story warrants it
+
+A site with no images that completes Iron Canvas with still no images is a FAILED run.
