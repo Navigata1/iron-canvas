@@ -73,7 +73,31 @@ Based on project type, which phases get maximum attention:
 
 ---
 
-## Step 4: Record the ORIENT Decision
+## Step 4: Set Tool Acquisition Posture
+
+Before recording the ORIENT decision, establish how the agent handles tool
+and service provisioning. See [references/tool-acquisition-protocol.md](../references/tool-acquisition-protocol.md)
+for the full protocol.
+
+```yaml
+tool_acquisition:
+  posture: "supervised" | "informed" | "autonomous"
+  # supervised → agent asks before every signup/install
+  # informed   → agent auto-provisions free tools, escalates paid (DEFAULT)
+  # autonomous → agent provisions everything within budget, reports after
+  budget_ceiling_monthly: 50    # USD, optional (autonomous mode)
+  allow_paid: true              # false = free-tier only regardless of posture
+```
+
+**If the user hasn't specified a posture, default to INFORMED.**
+
+After setting the posture, run the **Stack Audit** (Step 1-3 of the Tool
+Acquisition Protocol) to identify what's available, what's missing, and
+what needs provisioning before the build begins.
+
+---
+
+## Step 5: Record the ORIENT Decision
 
 Output this before proceeding:
 
@@ -87,6 +111,10 @@ Output this before proceeding:
   "phase_emphasis": [],
   "agents_to_spawn": [],
   "tech_stack_default": "MINIMAL / STANDARD / ELEVATED / IMMERSIVE",
+  "tool_acquisition_posture": "supervised / informed / autonomous",
+  "stack_audit_status": "complete / pending",
+  "tools_provisioned": [],
+  "tools_pending_approval": [],
   "dashboard_route": true,
   "scroll_engine": true,
   "three_js_eligible": false,
