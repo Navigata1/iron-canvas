@@ -1,5 +1,79 @@
 # Changelog
 
+## v4.0.0 — 2026-03-20
+
+### Major: Video Integration + Full v3.1 Wiring + New Asset Engines
+
+Iron Canvas v4 integrates insights from Samir's Applied AI Engineering series,
+wires all v3.1 gap-closure reference files into SKILL.md, and adds two new
+asset generation engines (Google Whisk + Google Flow).
+
+#### Video Integration (from Samir's 3-video series)
+- **Google Whisk** added to Phase 3 SCOUT + Phase 5 GENERATE engine registry
+  - Subject image → prompt → cleaned reference → animate → cinematic video loop
+- **Google Flow** added to Phase 5 GENERATE for keyframe interpolation
+  - Start frame + end frame → interpolated motion video (scroll sequence source)
+- **Asset Classification Taxonomy** — every generated asset categorized as:
+  - Scroll-tied → extract to JPEG frames at 15fps
+  - Looping background → keep as MP4 with autoplay/loop/muted
+  - Static → optimized image (WebP/AVIF)
+- **Discovery Interview Protocol** added to Phase 0 ORIENT
+  - 5-7 structured questions before any code (data origin, priority hierarchy,
+    interaction level, responsiveness, competitive positioning, asset inventory,
+    performance tier)
+- **Screen Recording as Phase 1 Input** — optional input type capturing motion
+  timing, scroll behavior, and interaction patterns that screenshots miss
+- **Two-Sweep UI Pattern** for Agent-C:
+  - Core pass: components, layout, responsive behavior
+  - Polish pass: cursor effects, hover states, sound design, loading transitions
+- **Enhancement Discovery** added to Phase 7 REFINE — Agent-E suggests additive
+  features based on BPM scores and competitive analysis beyond bug fixes
+- **BPM-to-Asset-Style Mapping** — Brand Personality Matrix now directly maps to
+  asset generation approach (Whisk cinematic vs Flow interpolation vs static)
+- 3 new anti-patterns: #9 One-Shot Prompting, #10 Skipping Asset Pipeline,
+  #11 Context Drift
+- 2 new craft details: Feature Discovery Post-Build, Post-Build Micro-Interaction Pass
+- **Agent Autonomy + Self-Provisioning Protocol** (`references/agent-autonomy.md`):
+  3-tier system (Supervised / Guided / Autonomous) governing how agents handle
+  missing tools, accounts, and API access. Includes stack scanning, dependency
+  evaluation, provisioning log, self-improving stack capabilities, and a
+  **persistence policy** with retry budgets per complexity class (Simple 3-5,
+  Moderate 3-15, Complex 3-unlimited), escalation/reroute protocols, and
+  Dead End declaration for genuinely impossible dependencies.
+
+#### v3.1 Reference Wiring (Gap Closure)
+All 10 reference files from STRATEGIC_SYNTHESIS.md now wired into SKILL.md:
+- `references/typography-system.md` → Phase 2 FEEL output (type_personality field)
+- `references/color-system.md` → Phase 2 FEEL output (oklch palette field)
+- `references/motion-budget.md` → Phase 2 FEEL output (motion tier field)
+- `references/grid-rhythm.md` → Phase 4 FORGE (Agent-A spatial system)
+- `references/performance-budget.md` → Phase 0 ORIENT output (performance tier)
+- `references/interaction-library.md` → Phase 4/6 (Agent-C state library)
+- `references/seo-conversion.md` → Phase 1 + Phase 5 + Phase 7 (OG image + conversion)
+- `phases/08-handoff.md` → Pipeline routing in SKILL.md (optional final phase)
+- `references/video-integration-protocol.md` → 7 hooks fully populated from transcripts
+
+#### Updated Files (v4)
+- `SKILL.md` — Complete v4 rewrite with all wiring + video integration
+- `ROUTING.md` — v4 engine registry, Discovery Interview routing, asset taxonomy
+- `phases/00-orient.md` — Discovery Interview + performance tier
+- `phases/01-study.md` — Screen recording input type
+- `phases/02-feel.md` — Typography/color/motion profile output sections
+- `phases/03-scout.md` — Whisk + Flow in engine registry
+- `phases/05-generate.md` — Keyframe interpolation, asset classification, OG image always
+- `phases/06-compose.md` — 15fps frame extraction protocol, asset pipeline verification
+- `agent-prompts/orchestrator.md` — Discovery Interview dispatch
+- `agent-prompts/agent-c-ui.md` — Two-sweep pattern
+- `agent-prompts/agent-d-artifacts.md` — Asset classification + Whisk/Flow
+- `agent-prompts/agent-e-qa.md` — Enhancement Discovery + MCP QA path
+- `templates/design-prd.md` — Asset Manifest + Framework Config sections
+- `templates/invocation-templates.md` — v4 invocation syntax
+- `references/anti-patterns.md` — 3 new anti-patterns
+- `references/model-selection.md` — Whisk + Flow added
+- `references/video-integration-protocol.md` — 7 hooks populated from transcripts
+
+---
+
 ## v3.0.0 — 2026-03-19
 
 ### Major: Multi-Agent Orchestration System
@@ -29,13 +103,6 @@ Iron Canvas is now a full multi-agent design orchestration system, not just a se
 - Phase 7 VERIFY: Now the full 5-axis Awwwards-grade audit (Design / Animation / Taste / Performance / Brand DNA) with numerical thresholds and exact remediation routing
 - Dashboard Addendum: Expanded with bento grid system, glassmorphism card signatures, data animation patterns, and dashboard-specific North Star scout queries
 
-#### Methodology Advances from Antigravity Pattern Analysis
-- Parallel agent dispatch after Design PRD packaging (Prompt 2 adapted)
-- Cross-LLM validation before build phase (Prompt 3 adapted)
-- Expertise injection before specialized agent execution (Prompt 7 adapted)
-- Feature ideation → document packaging → validation → parallel build → verify (complete workflow)
-- Narrated scroll experience with WebSocket TTS as first-class use case
-
 ---
 
 ## v2.0.0 — 2026-03-19
@@ -46,33 +113,17 @@ Merged two lineages:
 - Island Development Crew production pipeline
 - Rigorous animation architecture (Brand Personality Matrix, GSAP taxonomy, Awwwards verification)
 
-#### New
-- Brand Personality Matrix (6-dimension scoring system governing all downstream decisions)
-- Phase 3 SCOUT: AI Reference Intelligence with North Star image generation
-- 5-axis Awwwards verification system
-- Dashboard Addendum
-- Technology decision tree (Minimal / Standard / Elevated / Immersive)
-- Gate system with numerical thresholds across 4 checkpoints
-
 ---
 
 ## v1.0.0 — 2026-03-19
 
 ### Initial Release
 - Complete 7-phase methodology (STUDY → FEEL → COLLECT → FORGE → GENERATE → COMPOSE → REFINE)
-- Phase 1 STUDY: Site DNA profiling (palette, fonts, imagery, personality extraction)
-- Phase 2 FEEL: Emotional target discovery from existing site signals
-- Phase 3 COLLECT: Industry-matched reference gathering
-- Phase 4 FORGE: Structural enhancement with taste skill integration
-- Phase 5 GENERATE: Context-aware artifact creation with multi-model support
-  - Nano Banana Pro (Gemini 3 Pro Image) integration
-  - Leonardo AI Blueprints workflow accelerators
-  - Scroll sequence frame generation protocol
-  - Prompt engineering for context-aware artifacts
-- Phase 6 COMPOSE: Visual verification + GSAP ScrollTrigger + HTML5 Canvas scroll engine
-- Phase 7 REFINE: Iterative polish loop with per-site quality checklists
 - Production branching protocol (staging → production workflow)
 - 8 documented anti-patterns
-- Model selection guide (stills, video, rotation, style transfer, relighting)
-- Invocation templates for common workflows
-- Site DNA profile and feel profile templates
+- Model selection guide
+- Invocation templates
+
+---
+
+*Iron Canvas — Island Development Crew*

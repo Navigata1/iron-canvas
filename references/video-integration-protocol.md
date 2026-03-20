@@ -1,223 +1,267 @@
-# VIDEO INTEGRATION PROTOCOL
-## *Iron Canvas — Pending Transcript Integration*
+# VIDEO INTEGRATION PROTOCOL — Iron Canvas v4
+## *Insights extracted from Samir's Applied AI Engineering series*
 
-> **STATUS: FRAMEWORK BUILT — AWAITING TRANSCRIPT CONTENT**
+> **Source videos:**
+> - Video 1: Retro Sci-Fi 8-Bit Website Build (https://youtu.be/j74kjYvzzLk)
+> - Video 2: Universal AI Architect / Context Engineering (https://youtu.be/N_X9Zt8nXwk)
+> - Video 3: Jesko Jets Awwwards Clone (https://youtu.be/DUOvVST7fCw)
 >
-> This file was pre-built from three YouTube videos shared by Jon
-> that demonstrate building beautiful digital experiences.
+> **Prompts & assets:** https://aurascenes.com/ | GitHub: https://github.com/sam-vish/universal... | Notion: linked in video descriptions
 >
-> Video IDs:
->   Video 1: j74kjYvzzLk
->   Video 2: N_X9Zt8nXwk
->   Video 3: DUOvVST7fCw
->
-> To complete this file:
-> 1. Paste transcripts to Claude (copy from YouTube → Show transcript)
->    OR run through your YouTube v4.0 pipeline and paste the output
-> 2. Claude reads all three and populates the sections below
-> 3. Each section maps insights to functional Iron Canvas protocol
->
-> Pre-built hooks are ready. The file integrates immediately upon transcript delivery.
+> **Classification key:** `[P]` Philosophy | `[T]` Technique | `[W]` Workflow | `[C]` Craft Detail
 
 ---
 
-## HOW INSIGHTS ARE CLASSIFIED
+## HOOK 1 — ASSET-FIRST GENERATION (Phase 3 SCOUT + Phase 5 GENERATE)
 
-Every insight from the videos falls into one of four categories:
+**Principle:** Generate all visual/motion assets BEFORE writing a single line of code. The coding agent receives finished assets, not generation instructions.
 
-```
-CATEGORY A: PHILOSOPHY
-  → Mental models, principles, design thinking approaches
-  → Integrates into: SKILL.md preamble, Phase 2 (FEEL), Orchestrator brief
-  → Example: "Design systems should feel alive, not mechanical"
+### Insight: Google Whisk as North Star + Motion Engine `[T]`
+Google Whisk accepts a subject image + text prompt and outputs cleaned reference images.
+The "animate" button converts any Whisk still into a cinematic looping video.
+- **Phase 3 SCOUT integration:** Whisk becomes an additional North Star generation engine alongside Nano Banana Pro, Grok Imagine, GPT Image 1.5, and Leonardo Kino XL.
+- **Phase 5 GENERATE integration:** Whisk animate produces scroll-sequence source videos and background loops directly.
 
-CATEGORY B: TECHNIQUE
-  → Specific implementation methods, code patterns, tools
-  → Integrates into: Phase-specific files, expertise-injection.md, references/
-  → Example: "Use clip-path: inset() for elegant text reveal animations"
+### Insight: Google Flow for Keyframe Interpolation `[T]`
+Google Flow accepts a start frame + end frame and interpolates a smooth video transition between them.
+- **Application:** Generate two stills (before/after states of a scroll transition), feed to Flow, receive interpolated motion. This is the most efficient path to scroll-tied sequences.
+- **Phase 5 integration:** Add "Keyframe Interpolation" as a generation method alongside frame-by-frame and video extraction.
 
-CATEGORY C: WORKFLOW
-  → Process insights, sequencing decisions, agent-level behaviors
-  → Integrates into: Orchestrator, phase files, agent prompts
-  → Example: "Explore 10 directions before committing to one"
+### Insight: Three Asset Categories `[C]`
+Every generated asset falls into one of three optimization classes:
+1. **Scroll-tied** → Convert to individual JPEG frames at 15fps (the sweet spot — smooth without bloat)
+2. **Looping background** → Keep as MP4, autoplay + loop + muted in browser
+3. **Static hero/reference** → Optimized image (WebP/AVIF)
 
-CATEGORY D: CRAFT DETAIL
-  → The 1% decisions that separate great from excellent
-  → Integrates into: interaction-library.md, agent-c-ui.md, anti-patterns
-  → Example: "Easing curves should match the emotional register of the moment"
-```
+**Agent-D (Artifacts) must classify every asset into one of these three categories before integration.**
 
----
-
-## PRE-BUILT INTEGRATION HOOKS
-
-These sections exist now. They will be populated when transcripts arrive.
-
----
-
-### HOOK 1: FEEL PHILOSOPHY ADDENDUM
-*Target: phases/02-feel.md — Section: Emotional Design Principles*
-*Category: A — Philosophy*
-
-```
-[TO BE POPULATED FROM VIDEO INSIGHTS]
-
-Expected content: How the creator approaches "feel" before visual execution.
-How they translate a brief or intention into emotional direction.
-What questions they ask before opening any software.
-```
-
-**Integration plan:**
-Add as a callout box in phases/02-feel.md titled:
-"Field-Tested Emotional Design Principles" with attribution to creator's approach.
-The insights become questions in the feel-profile.json output.
+### Engine Registry Update
+| Engine | Type | Best For | Phase |
+|--------|------|----------|-------|
+| Nano Banana Pro | Image | Product shots, brand imagery | 3, 5 |
+| Leonardo Kino XL | Image + Video | Blueprint workflows, product spins | 5 |
+| Grok Imagine | Image | Conceptual, abstract | 3 |
+| GPT Image 1.5 | Image | Photorealistic, editorial | 3, 5 |
+| **Google Whisk** | Image → Video | Reference cleanup, cinematic loops | **3, 5** |
+| **Google Flow** | Video (interpolation) | Scroll transitions, morphs | **5** |
 
 ---
 
-### HOOK 2: VISUAL COMPOSITION PRINCIPLES
-*Target: references/composition.md (new file, created from video content)*
-*Category: A + B — Philosophy + Technique*
+## HOOK 2 — CONTEXT ENGINEERING (Phase 0 ORIENT + Phase 1 STUDY)
 
-```
-[TO BE POPULATED FROM VIDEO INSIGHTS]
+**Principle:** "Your coding agents are only as good as the instructions and assets you feed them." Generic prompts = generic output. Context injection = premium output.
 
-Expected content: How the creator thinks about where things go on a page.
-Hierarchy principles. What the eye does. Focal points. White space use.
-Any specific compositional frameworks or mental models they use.
-```
+### Insight: Discovery Interview Protocol `[W]`
+Before any code, the architect agent conducts a 5-7 question structured interview:
+1. **Data origin** — Where does content come from? (CMS, static, API, manual)
+2. **Priority hierarchy** — What are the top 3 things a visitor must see/do?
+3. **Interaction level** — Passive consumption vs. active engagement?
+4. **Responsiveness requirements** — Mobile-first? Desktop-dominant? Parity?
+5. **Competitive positioning** — What should this feel better than?
+6. **Asset inventory** — What exists? What must be generated?
+7. **Performance tier** — Speed-critical? Motion-heavy? Balanced?
 
-**Integration plan:**
-New file `references/composition.md` will be created.
-Referenced from Phase 1 (STUDY) and Phase 4 (FORGE).
-Agent-A consults this when making layout structure decisions.
+**Phase 0 ORIENT integration:** Add Discovery Interview as a mandatory step between project type selection and Phase 1 entry. The interview output feeds directly into the Site DNA Profile.
 
----
+### Insight: Universal Repository as Permanent Source of Truth `[P]`
+Samir's "Universal AI Architect Repository" contains:
+- `framework-rules.md` — Hard-locks tech stack
+- `dashboard-patterns.md` — Encodes layout intelligence
 
-### HOOK 3: ANIMATION PHILOSOPHY
-*Target: references/motion-budget.md — Section: Motion Intent*
-*Category: A — Philosophy*
+**Iron Canvas equivalent:** This IS our skill architecture. The insight validates our approach — the skill repo itself is the universal repository. The difference: Iron Canvas also studies the existing site (competitors don't).
 
-```
-[TO BE POPULATED FROM VIDEO INSIGHTS]
+### Insight: Screen Recording as Phase 1 Input `[T]`
+Video 3 uses a screen recording of the target site as source of truth — capturing motion timing, scroll behavior, and interaction patterns that screenshots miss.
 
-Expected content: How the creator decides what should move and why.
-The relationship between motion and meaning. Common motion anti-patterns
-they call out. How to use motion to guide attention without distraction.
-```
-
-**Integration plan:**
-Add as "Motion Intent Principles" section at top of references/motion-budget.md.
-These principles precede the technical motion budget scoring.
+**Phase 1 STUDY integration:** Add optional "Screen Recording Analysis" input type. When provided, extract:
+- Scroll-to-animation timing relationships
+- Transition durations and easing curves
+- Interaction trigger points
+- Content reveal sequences
 
 ---
 
-### HOOK 4: TYPOGRAPHY CRAFT DETAILS
-*Target: references/typography-system.md — Section: Craft Details*
-*Category: D — Craft Detail*
+## HOOK 3 — SCROLL SEQUENCE ARCHITECTURE (Phase 6 COMPOSE)
 
+**Principle:** Scroll-tied animations require frame-level control. Videos can't be scrubbed by scroll position — individual frames can.
+
+### Insight: Video-to-Frames Pipeline `[T]`
+1. Generate source video (Whisk animate, Flow interpolation, or existing footage)
+2. Extract frames using conversion tool at **15fps** (not 30fps — half the file count, visually identical on web)
+3. Place frame sequences in `/public/sequences/` with numbered naming (`frame-001.jpg`, `frame-002.jpg`, etc.)
+4. Canvas component draws frames tied to ScrollTrigger progress
+
+**Phase 6 COMPOSE integration:** The scroll engine assembly must include:
 ```
-[TO BE POPULATED FROM VIDEO INSIGHTS]
-
-Expected content: Specific typographic observations the creator makes.
-How they approach type as a design element. Pairing logic. Scale decisions.
-Any specific typefaces or combinations they use and why.
+FRAME EXTRACTION PROTOCOL:
+1. Source video → ffmpeg or browser tool → JPEG frames at 15fps
+2. Naming: {sequence-name}-{NNN}.jpg (zero-padded 3 digits)
+3. Storage: /public/sequences/{sequence-name}/
+4. Preloading: First 10 frames eager, remainder lazy
+5. Canvas binding: GSAP ScrollTrigger → frame index = Math.floor(progress * totalFrames)
 ```
 
-**Integration plan:**
-Appended to references/typography-system.md as a "Craft Details" section.
-Applied through Agent-A and Agent-C token decisions.
+### Insight: Asset Pipeline Setup Before Code `[W]`
+"Before we write even a single line of code, we need to set up our asset pipeline. The AI can't build a website if it can't find the files."
+
+**Agent-A (Foundation) integration:** Before scaffolding HTML/CSS, Agent-A must:
+1. Verify all generated assets exist in `/public/`
+2. Confirm sequence folders are numbered correctly
+3. Validate video files have correct codec/format for web
+4. Create asset manifest JSON listing all resources and their categories
 
 ---
 
-### HOOK 5: INTERACTION CRAFT DETAILS
-*Target: references/interaction-library.md — Section: Craft Notes*
-*Category: D — Craft Detail*
+## HOOK 4 — BRAND PERSONALITY TO MOTION MAPPING (Phase 2 FEEL)
 
-```
-[TO BE POPULATED FROM VIDEO INSIGHTS]
+**Principle:** Motion choices aren't arbitrary — they derive from brand identity scores.
 
-Expected content: Hover states, transitions, micro-interactions the creator
-emphasizes. Specific GSAP patterns they demonstrate. Any novel interaction
-approaches not already in the Iron Canvas library.
-```
+### Insight: Aesthetic-Driven Asset Selection `[P]`
+Samir's retro build (Video 1) demonstrates how a single Pinterest reference image drives ALL downstream decisions:
+- Color palette (deep space blacks, pixel greens, CRT amber)
+- Motion type (scan lines, matrix rain, oscilloscope waves)
+- Typography (monospace terminal fonts)
+- Interaction style (command-line inputs, boot sequences)
 
-**Integration plan:**
-Appended to references/interaction-library.md as a "From the Field" section.
-Immediately usable by Agent-C.
+**Phase 2 FEEL integration:** The Brand Personality Matrix already scores 6 axes. Add explicit mapping:
 
----
+| BPM Score Range | Asset Generation Style |
+|----------------|----------------------|
+| Bold 8-10 + Avant-garde 8-10 | Custom 3D, WebGL, Whisk cinematic loops |
+| Bold 5-7 + Refined 6-10 | Flow interpolation, subtle parallax frames |
+| Bold 1-4 + Classic 7-10 | Static hero images, minimal motion |
+| Playful 7-10 | Animated illustrations, GIF-style loops |
+| Serious 8-10 + Technical 7-10 | Data visualization, clean transitions |
 
-### HOOK 6: TOOL / WORKFLOW DISCOVERIES
-*Target: references/expertise-injection.md or model-selection.md*
-*Category: B + C — Technique + Workflow*
+### Insight: "Scaling the Aesthetic" `[C]`
+A great hero section isn't enough — the entire site must breathe the same DNA. Every section gets its own contextual background asset:
+- System stats → oscilloscope waveform loop
+- Testimonials → matrix code rain loop
+- Footer → seamless globe rotation
 
-```
-[TO BE POPULATED FROM VIDEO INSIGHTS]
-
-Expected content: Any specific tools, libraries, APIs, or workflows
-demonstrated that aren't already in Iron Canvas. If the creator uses
-a specific version of something or a custom approach to a common tool.
-```
-
-**Integration plan:**
-New tools → expertise-injection.md with full injection block.
-Workflow discoveries → relevant phase file or new reference doc.
-Model/AI tool recommendations → model-selection.md update.
+**Agent-D must generate section-specific background assets, not just hero assets.**
 
 ---
 
-### HOOK 7: THE CREATOR'S MENTAL MODEL (IF DISTINCT)
-*Target: SKILL.md — Section: Design Philosophy / Or new philosophy.md*
-*Category: A — Philosophy*
+## HOOK 5 — MULTI-AGENT ORCHESTRATION PATTERNS (SWARM + MISSION modes)
 
-```
-[TO BE POPULATED FROM VIDEO INSIGHTS]
+**Principle:** "We stopped trying to get one model to do everything. Instead, we orchestrated a team of specialized AI tools."
 
-Expected content: The creator's overall design philosophy, if they articulate one.
-How they describe what makes something beautiful vs. merely functional.
-Their standard for when work is "done."
-The north star they aim for that shapes all their decisions.
-```
+### Insight: Tool Specialization Chain `[W]`
+Samir's pipeline assigns one tool per job:
+- **Whisk** → Visual generation (stills + animation)
+- **Flow** → Motion interpolation (frame-to-frame)
+- **Gemini 3 Pro** → Architecture and blueprint generation (massive context window)
+- **Antigravity** → Code execution and scaffolding
+- **TestSprite** → Autonomous QA via MCP
 
-**Integration plan:**
-If the creator has a coherent, distinct mental model not already in Iron Canvas:
-Create `references/design-philosophy.md` as a companion to SKILL.md.
-Reference in Orchestrator agent prompt as philosophical context.
+**Iron Canvas mapping:**
+| Samir's Role | Iron Canvas Agent | Phase |
+|-------------|------------------|-------|
+| Whisk/Flow (asset gen) | Agent-D (Artifacts) | 3, 5 |
+| Gemini (architect) | Orchestrator | 0-3.9 |
+| Antigravity (builder) | Agents A-C (Foundation, Motion, UI) | 4-6 |
+| TestSprite (QA) | Agent-E (QA) | 7 |
 
----
+### Insight: Blueprint-Then-Build Pattern `[W]`
+Video 3's workflow: Screen recording → AI Studio generates comprehensive blueprint → Blueprint handed to coding IDE → IDE follows blueprint exactly.
 
-## AFTER TRANSCRIPT DELIVERY: INTEGRATION CHECKLIST
+**This IS Phase 3.9 (Design PRD Packaging).** Validates that the PRD step is non-optional. The blueprint must be complete before any agent writes code.
 
-```
-□ All insights extracted and classified (A/B/C/D)
-□ Hook 1 populated + phases/02-feel.md updated
-□ Hook 2 populated + references/composition.md created
-□ Hook 3 populated + references/motion-budget.md updated
-□ Hook 4 populated + references/typography-system.md updated
-□ Hook 5 populated + references/interaction-library.md updated
-□ Hook 6 populated + relevant files updated
-□ Hook 7 assessed → philosophy.md created if warranted
-□ ROUTING.md updated with any new files
-□ Orchestrator prompt updated if philosophy-level shifts apply
-□ CHANGELOG.md updated: "Video Integration — [creator name] insights added"
-□ Archive updated: iron-canvas-v3-final.tar.gz rebuilt
-```
+### Insight: Autonomous QA Agent `[T]`
+TestSprite runs as an MCP server inside the editor:
+1. Receives the PRD as test context
+2. Auto-generates test cases from requirements
+3. Runs 13+ test cases in parallel
+4. Produces a detailed test report with videos, error codes, and fix suggestions
+5. Fix suggestions are fed back to the coding agent
 
----
-
-## WHAT MAKES THIS DIFFERENT FROM JUST READING A VIDEO
-
-The goal is not to quote the creator. It is to distill their practice
-into protocol that Iron Canvas agents execute without human guidance.
-
-A useful principle becomes a checklist item.
-A demonstrated technique becomes an expertise injection block.
-A mental model becomes a question in the feel profile.
-A craft detail becomes a specific line in an agent prompt.
-
-Iron Canvas doesn't collect inspiration. It converts inspiration into execution.
+**Agent-E (QA) integration:** Add MCP-based QA tooling as an optional execution path in Phase 7 REFINE. When available:
+- Feed the Design PRD from Phase 3.9 as test context
+- Run automated accessibility, performance, and visual regression tests
+- Generate fix report → route back to relevant Build Agent
 
 ---
 
-*Iron Canvas v3 — references/video-integration-protocol.md*
-*Status: Framework complete — pending transcript content*
+## HOOK 6 — PRD / BLUEPRINT GENERATION (Phase 3.9 PACKAGE)
+
+**Principle:** The implementation plan IS the product specification. It defines React components, motion logic, framework configuration, and even copy — all before code.
+
+### Insight: PRD Contents Must Include `[C]`
+From Video 3's blueprint generation, a production PRD contains:
+1. **Component inventory** — Every React component named and described
+2. **Motion logic** — Which animations, what triggers, what easing
+3. **Framework configuration** — Tailwind v4 config, Next.js settings
+4. **Copy/content** — Actual text content, not lorem ipsum
+5. **Asset manifest** — Every video, image sequence, and static asset with paths
+6. **Layout grid** — Section order, spacing, responsive breakpoints
+
+**Phase 3.9 template update:** Add "Asset Manifest" and "Framework Configuration" as required PRD sections. The current template covers components and motion but misses explicit asset paths and framework config.
+
+### Insight: Context Window Exploitation `[P]`
+Samir uses Google AI Studio with Gemini 3 Pro specifically for its massive context window — he feeds a full screen recording + master prompt simultaneously.
+
+**Iron Canvas implication:** When generating the Design PRD in Phase 3.9, prefer models with large context windows. The PRD generation step should receive:
+- All Phase 0-3 outputs (Site DNA, BPM, North Star, Validation Report)
+- Screen recording or reference screenshots
+- The skill's own phase documentation
+
+---
+
+## HOOK 7 — ANTI-PATTERNS + CRAFT WISDOM (references/anti-patterns.md)
+
+**Principle:** "If you feed them generic prompts, you're going to get generic boring websites that look exactly like everyone else's."
+
+### Anti-Pattern: One-Shot Prompting `[P]`
+"Most people just open a coding editor and start typing 'build me a SaaS dashboard.' Then they keep prompting linearly — fixing errors, fighting linters, rewriting components, wondering why the UI keeps drifting."
+
+**Iron Canvas already solves this** with the 8-phase pipeline. But this quote belongs in anti-patterns.md as the #1 warning.
+
+### Anti-Pattern: Skipping Asset Pipeline `[T]`
+"You can't just put video files directly onto a website. They're too heavy. But more importantly, you can't control their playback with the scroll bar."
+
+**Add to anti-patterns.md:** Never hand raw video to a scroll engine. Always classify (scroll-tied → frames, looping → video, static → image) and optimize before integration.
+
+### Anti-Pattern: Context Drift `[P]`
+"That approach forces the AI to guess your stack, your layout logic, and your standards — and just keep guessing why your project is breaking."
+
+**Add to anti-patterns.md:** Context drift is the #1 cause of UI drift in multi-turn agent sessions. The cure is persistent context injection (our skill repo) + discovery interview (Phase 0) + Design PRD (Phase 3.9).
+
+### Craft Detail: Feature Discovery Post-Build `[C]`
+After the initial build, Samir asks the agent "what other features can we add to make it more appealing?" and gets suggestions like sound design, custom cursor, micro-interactions — then implements them.
+
+**Phase 7 REFINE integration:** Add "Enhancement Discovery" step where the QA agent suggests additive features based on the BPM scores and competitive analysis, beyond just bug fixes and performance tuning.
+
+### Craft Detail: Post-Build Micro-Interaction Pass `[C]`
+Sound design, custom cursors, and micro-interactions are added AFTER the main build, not during. This prevents scope creep during core development.
+
+**Agent-C (UI) integration:** Micro-interactions are a dedicated post-build pass, not interleaved with component development. Agent-C runs two sweeps:
+1. **Core pass:** Components, layout, responsive behavior
+2. **Polish pass:** Cursor effects, hover states, sound design, loading transitions
+
+---
+
+## INTEGRATION CHECKLIST
+
+When all 7 hooks are active, the following files need updates:
+
+- [x] `references/video-integration-protocol.md` — This file (populated)
+- [ ] `phases/00-orient.md` — Add Discovery Interview step
+- [ ] `phases/03-scout.md` — Add Whisk + Flow to engine registry
+- [ ] `phases/05-generate.md` — Add Keyframe Interpolation method, asset classification taxonomy
+- [ ] `phases/06-compose.md` — Add frame extraction protocol, asset pipeline verification
+- [ ] `phases/02-feel.md` — Add BPM-to-asset-style mapping table
+- [ ] `agent-prompts/agent-d-artifacts.md` — Asset classification + section-specific generation
+- [ ] `agent-prompts/agent-c-ui.md` — Two-sweep pattern (core + polish)
+- [ ] `agent-prompts/agent-e-qa.md` — Enhancement Discovery + MCP QA path
+- [ ] `templates/design-prd.md` — Add Asset Manifest + Framework Config sections
+- [ ] `references/anti-patterns.md` — Add 3 new anti-patterns + 2 craft details
+- [ ] `SKILL.md` — Wire all v4 additions
+- [ ] `ROUTING.md` — Update version, add new file references
+- [ ] `CHANGELOG.md` — v4 entry
+
+---
+
+*Video Integration Protocol — Iron Canvas v4*
+*Source: Samir's Applied AI Engineering series (2026)*
+*"Your coding agents are only as good as the instructions and the assets you feed them."*
