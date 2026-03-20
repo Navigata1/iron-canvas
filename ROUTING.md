@@ -236,11 +236,14 @@ references/leonardo-blueprints.md     ★ Leonardo AI blueprint workflows
 references/expertise-injection.md     ★ Domain expertise injections (GSAP, Three.js,
                                        Nano Banana, Lenis, Barba.js, AudioContext)
                                        LOAD THIS before each Build Agent executes.
-references/tool-acquisition-protocol.md  ★ Self-provisioning intelligence protocol
-                                       Three trust postures: SUPERVISED / INFORMED / AUTONOMOUS
-                                       LOAD THIS in Phase 0 to set posture + audit stack.
-                                       Governs how agents discover, sign up for, and
-                                       manage tools/services/APIs throughout the build.
+references/agent-autonomy.md             ★ Agent Autonomy Protocol (v4 — PRIMARY)
+                                       Three tiers: SUPERVISED / GUIDED / AUTONOMOUS
+                                       + Persistence Policy (retry logic, Dead Ends)
+                                       LOAD THIS in Phase 0 to set tier + run stack scan.
+                                       Governs how agents discover, sign up for, retry,
+                                       and manage tools/services/APIs throughout the build.
+references/tool-acquisition-protocol.md  Supplementary provisioning patterns + credential mgmt.
+                                       Read after agent-autonomy.md if deeper detail needed.
 references/color-system.md            oklch palettes, dark mode, gradient protocols
 references/typography-system.md       Type classification, pairing, variable fonts
 references/grid-rhythm.md             Spatial system, baseline grid, responsive breakpoints

@@ -73,27 +73,31 @@ Based on project type, which phases get maximum attention:
 
 ---
 
-## Step 4: Set Tool Acquisition Posture
+## Step 4: Set Agent Autonomy Tier
 
 Before recording the ORIENT decision, establish how the agent handles tool
-and service provisioning. See [references/tool-acquisition-protocol.md](../references/tool-acquisition-protocol.md)
-for the full protocol.
+and service provisioning. **Read [references/agent-autonomy.md](../references/agent-autonomy.md)**
+for the full protocol (tiers, stack scan, persistence policy, retry logic).
 
 ```yaml
-tool_acquisition:
-  posture: "supervised" | "informed" | "autonomous"
-  # supervised → agent asks before every signup/install
-  # informed   → agent auto-provisions free tools, escalates paid (DEFAULT)
-  # autonomous → agent provisions everything within budget, reports after
-  budget_ceiling_monthly: 50    # USD, optional (autonomous mode)
-  allow_paid: true              # false = free-tier only regardless of posture
+agent_autonomy:
+  tier: 1 | 2 | 3
+  # Tier 1 — SUPERVISED: Ask before any account creation, install, or payment
+  # Tier 2 — GUIDED:     Self-provision free tools/accounts, ask before paid (DEFAULT)
+  # Tier 3 — AUTONOMOUS: Use judgment, sign up/install/configure as needed, log everything
+  tier_label: "SUPERVISED | GUIDED | AUTONOMOUS"
+  budget_ceiling_monthly: 50    # USD, optional (Tier 3)
+  allow_paid: true              # false = free-tier only regardless of tier
 ```
 
-**If the user hasn't specified a posture, default to INFORMED.**
+**If the operator hasn't specified a tier, default to Tier 2 (GUIDED).**
 
-After setting the posture, run the **Stack Audit** (Step 1-3 of the Tool
-Acquisition Protocol) to identify what's available, what's missing, and
-what needs provisioning before the build begins.
+After setting the tier, run the **Stack Scan** (Steps 3-5 of the Agent Autonomy
+Protocol) to inventory what's installed, what's missing, and resolve gaps
+per tier before the build begins.
+
+Also see [references/tool-acquisition-protocol.md](../references/tool-acquisition-protocol.md)
+for additional provisioning patterns and credential management detail.
 
 ---
 
@@ -111,8 +115,13 @@ Output this before proceeding:
   "phase_emphasis": [],
   "agents_to_spawn": [],
   "tech_stack_default": "MINIMAL / STANDARD / ELEVATED / IMMERSIVE",
-  "tool_acquisition_posture": "supervised / informed / autonomous",
-  "stack_audit_status": "complete / pending",
+  "agent_autonomy": {
+    "tier": 2,
+    "tier_label": "GUIDED",
+    "budget_ceiling_monthly": null,
+    "allow_paid": true
+  },
+  "stack_scan_status": "complete / pending",
   "tools_provisioned": [],
   "tools_pending_approval": [],
   "dashboard_route": true,
@@ -152,6 +161,8 @@ IMMERSIVE: GSAP + Three.js + Lenis + Custom GLSL + Barba.js
 - [ ] Execution mode selected with rationale
 - [ ] Phase emphasis defined
 - [ ] Tech stack default selected
+- [ ] Agent autonomy tier set (default: Tier 2 GUIDED)
+- [ ] Stack scan completed (tools available vs. needed)
 - [ ] ORIENT decision JSON recorded
 
 **Only proceed to Phase 1 (or Phase 2 for Type F) when complete.**
