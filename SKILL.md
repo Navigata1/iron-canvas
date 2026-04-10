@@ -1939,6 +1939,56 @@ gsap.from('.chart-bar', {
 .live-indicator { animation: data-pulse 2s ease-in-out infinite; }
 ```
 
+**THE 5 BENTO CARD ARCHETYPES (v4.2 — Motion Engine):**
+
+Every dashboard bento grid should draw from these archetypes for perpetual micro-motion.
+Spring physics (`stiffness: 100, damping: 20`) on all interactive elements — no linear easing.
+Each card contains a "perpetual state" that loops infinitely to keep the dashboard feeling alive.
+
+```
+ARCHETYPE 1: THE INTELLIGENT LIST
+  → Vertical stack of items with infinite auto-sorting loop
+  → Items swap positions using layoutId (Framer) or GSAP Flip
+  → Simulates AI prioritizing tasks in real-time
+  → Sort animation: spring physics, 0.5s duration
+  → Sort interval: every 4-6 seconds
+
+ARCHETYPE 2: THE COMMAND INPUT
+  → Search/AI bar with multi-step Typewriter Effect
+  → Cycles through 3-5 complex prompts with blinking cursor
+  → Includes "processing" state: shimmering loading gradient
+  → Typewriter speed: 40ms/char, pause: 2s between prompts
+  → Uses GSAP or CSS animation — NEVER useState for typing state
+
+ARCHETYPE 3: THE LIVE STATUS
+  → Scheduling interface with "breathing" status indicators
+  → Pop-up notification badge: overshoot spring effect
+  → Badge appears with back.out(2) ease, stays 3s, fades with power2.in
+  → Breathing dots: scale 1→1.15→1 infinite loop, 2s duration
+  → Status colors: oklch-based green/amber/red tokens
+
+ARCHETYPE 4: THE WIDE DATA STREAM
+  → Horizontal infinite carousel of data cards or metrics
+  → Seamless loop: x: ["0%", "-100%"] with duplicated content
+  → Speed: 30s for full cycle (feels effortless, not frantic)
+  → Pause on hover. Resume on leave.
+  → Use will-change: transform and translateZ(0) for GPU
+
+ARCHETYPE 5: THE CONTEXTUAL UI (FOCUS MODE)
+  → Document view that animates staggered text highlight
+  → Followed by "float-in" of a floating action toolbar
+  → Toolbar contains micro-icons (edit, share, annotate)
+  → Highlight: background-color transition with 0.3s stagger
+  → Toolbar: y:10 opacity:0 → y:0 opacity:1, back.out(1.5) ease
+```
+
+**Bento archetype performance rules:**
+- Each perpetual animation lives in its own isolated component
+- React: wrapped in React.memo, uses useMotionValue (not useState)
+- Vanilla: wrapped in requestAnimationFrame, uses transform only
+- Test: dashboard must maintain 60fps with ALL archetypes running simultaneously
+```
+
 **Dashboard North Star scout searches:**
 ```
 "mission control UI dark dashboard premium 2024"
@@ -1995,35 +2045,118 @@ refinements, and micro-interactions that weren't in the original scope.
 Sound design, custom cursors, and micro-interactions are added AFTER the main
 build, not during. Agent-C runs two sweeps: Core Pass → Polish Pass.
 
+### § DESIGN SLOP — AI TELLS TO ELIMINATE (v4.2)
+
+> These are CSS/content patterns that make AI output look generic.
+> ALL agents scan output against this list before committing.
+> Full list with examples: references/anti-patterns.md Section II.
+
+**Visual/CSS Tells — NEVER produce:**
+- Pure #000000 → use off-black (#0a0a0a, #111111)
+- Neon/outer glow box-shadows → tint shadows to background hue
+- Default Tailwind shadows (shadow-md/lg/xl) → customize and tint
+- Oversaturated accents (saturation > 80%) → desaturate
+- h-screen → ALWAYS min-h-[100dvh] (iOS Safari)
+- Flexbox percentage math → CSS Grid
+- Emojis in markup/text/alt → icons or SVG
+- Animating top/left/width/height → transform + opacity only
+
+**Typography Tells — NEVER produce:**
+- Inter font for premium/creative (unless DNA Profile specifies it)
+- Oversized H1s (use weight/color for hierarchy, not just size)
+- System fonts as only choice → self-host with font-display: swap
+- Orphan words in headings → text-wrap: balance
+- Serif in dashboard/software UIs → sans-serif + monospace only
+
+**Layout Tells — NEVER produce:**
+- Centered Hero when BPM Bold ≥ 5 → split/asymmetric
+- 3-column equal card feature rows → zig-zag, asymmetric, masonry
+- No max-width container → max-w-[1400px] mx-auto
+- Cards everywhere → only when elevation communicates hierarchy
+
+**Content Tells — NEVER produce:**
+- Generic names: "John Doe", "Jane Smith", "Acme Corp"
+- Fake numbers: 99.99%, 50%, $100.00 → use organic data: 47.2%, $99.00
+- AI clichés: "Elevate", "Seamless", "Unleash", "Next-Gen", "Game-changer", "Delve"
+- Lorem Ipsum → real draft copy
+- Broken Unsplash links → picsum.photos/seed/{name}/800/600
+- Same avatar for multiple users → unique per person
+- "Oops!" error messages → direct: "Connection failed. Please try again."
+
+### § OUTPUT ENFORCEMENT (v4.2)
+
+> A partial output is a broken output. No agent produces lazy code.
+> Full protocol: references/output-enforcement.md
+
+**BANNED in code blocks:**
+`// ...`, `// rest of code`, `// TODO`, `// similar to above`, `// continue pattern`, `// add more as needed`, bare `...`
+
+**BANNED in prose:**
+"Let me know if you want me to continue", "For brevity...", "The rest follows the same pattern", "And so on"
+
+**BANNED structural shortcuts:**
+Skeleton when full implementation requested. First+last section skipping middle. One example + description replacing repeated logic.
+
+**On token limit:** Write at full quality to a clean breakpoint, then:
+`[PAUSED — X of Y complete. Send "continue" to resume from: {next section}]`
+No compression. No skipping ahead. No summary.
+
+### § DEPENDENCY VERIFICATION (v4.2)
+
+Before importing ANY 3rd-party library:
+1. CHECK package.json — is it installed?
+2. If MISSING → output install command FIRST
+3. NEVER assume a library exists
+
+Tailwind: check v3 vs v4 before using syntax.
+Next.js: interactive components must be 'use client' leaf components.
+
+### § RESPONSIVE HARDENING (v4.2)
+
+Non-negotiable mobile rules:
+- ALL multi-column layouts → single column below 768px. No exceptions.
+- Touch targets ≥ 44px on ALL interactive elements
+- Display type: clamp(2.5rem, 7vw, 5rem) — never overflows
+- Body text minimum: 1rem (16px)
+- Horizontal overflow on mobile = critical failure
+- Content constrained: max-w-[1400px] mx-auto
+- Full rules: references/grid-rhythm.md Step 7
+
+### § STATE COMPLETENESS MANDATE (v4.2)
+
+Every interactive element: Default → Hover → Focus-Visible → Active → Disabled
+Every view: Loading state (skeleton) + Empty state (CTA) + Error state (inline)
+No circular spinners. No "Oops!" messages. No dead-end empty states.
+
 ## ═══════════════════════════════════════════════════
 ## SECTION 15: § INVOCATIONS (v4)
 ## ═══════════════════════════════════════════════════
 
 ```
 # MISSION MODE — Full team
-Iron Canvas v4 MISSION MODE for [project].
+Iron Canvas v4.2 MISSION MODE for [project].
 Full team. Discovery Interview first. Phases 0-8.
 Target: Awwwards Site of the Day quality.
 
 # SWARM MODE — Standard production
-Iron Canvas v4 SWARM MODE for [URL/project].
+Iron Canvas v4.2 SWARM MODE for [URL/project].
 Phases 0-3.9 sequential. Then parallel agents. Merge and verify.
 
 # SOLO MODE — Quick enhancement
-Iron Canvas v4 SOLO for [URL].
+Iron Canvas v4.2 SOLO for [URL].
 Phase 1 FIRST — no changes before DNA profile.
 
 # DASHBOARD BUILD
-Iron Canvas v4 MISSION MODE — DASHBOARD ROUTE for [name].
+Iron Canvas v4.2 MISSION MODE — DASHBOARD ROUTE for [name].
 Type C project. Bento + glass + data animation.
 
 # SCROLL SEQUENCE — Keyframe Interpolation (v4)
-Iron Canvas v4 Phase 5 scroll sequence for [site].
+Iron Canvas v4.2 Phase 5 scroll sequence for [site].
 Method: Keyframe Interpolation (Whisk/Nano Banana start+end → Flow → 15fps extraction).
 Product: [description]. Section: [where, dimensions].
 
 # HANDOFF
-Iron Canvas v4 Phase 8 HANDOFF for [project]. Generate HANDOFF.md.
+Iron Canvas v4.2 Phase 8 HANDOFF for [project]. Generate HANDOFF.md.
 ```
 
 ---

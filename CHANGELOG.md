@@ -1,5 +1,105 @@
 # Changelog
 
+## v4.2.0 — 2026-03-29
+
+### Major: Design Quality Gates + Output Enforcement + Taste-Skill Integration
+
+Iron Canvas v4.2 absorbs best practices from the taste-skill ecosystem (5.5K stars),
+adding CSS-level anti-slop enforcement, output completeness rules, and responsive
+hardening that prevent agents from producing generic-looking output.
+
+#### Gap 1: Design Slop Anti-Patterns (CRITICAL)
+- `references/anti-patterns.md` expanded from workflow-only to dual-section:
+  - Section I: 11 workflow anti-patterns (unchanged from v4)
+  - Section II: Design-level AI tells — visual/CSS, typography, layout, content,
+    component, and external resource patterns that make output look generic
+- All agents now load Section II at every phase start
+
+#### Gap 2: Output Enforcement Protocol
+- NEW `references/output-enforcement.md` — prevents lazy AI code generation
+- Bans: `// ...`, `// TODO`, `// rest of code`, skeleton outputs, "for brevity"
+- Agent-specific enforcement rules for Agents A through E
+- Token limit handling: clean breakpoints with PAUSED protocol
+
+#### Gap 3: Interactive State Mandate
+- Agent-C upgraded to require ALL 5 states on every element (default/hover/focus/active/disabled)
+- Loading, empty, and error states are now REQUIRED deliverables (not optional)
+- No circular spinners. No "Oops!" messages. No dead-end empty states.
+
+#### Gap 4: High-End Component Patterns
+- `references/interaction-library.md` expanded with:
+  - Double-Bezel ("Doppelrand") card architecture
+  - Button-in-Button trailing icon pattern
+  - Liquid Glass refraction panel
+  - Fluid Island navigation with hamburger morph
+  - Eyebrow tags (section preheaders)
+
+#### Gap 5: Dependency Verification
+- Agent-A now MUST check package.json before importing any library
+- Tailwind version lock (v3 vs v4 syntax check)
+- RSC safety rules for Next.js projects
+
+#### Gap 6: Responsive Hardening
+- `references/grid-rhythm.md` Step 7 added with non-negotiable mobile rules
+- 44px touch targets, single-column collapse below 768px, clamp() typography
+- Container constraints, no horizontal overflow, image behavior on mobile
+
+#### Gap 7: React/Next.js Motion Rules
+- `references/motion-budget.md` expanded with React-specific performance rules
+- GSAP vs Framer Motion separation (never mixed in same component tree)
+- useMotionValue/useTransform for continuous animations (not useState)
+- Perpetual motion isolation in React.memo components
+- Mandatory useEffect cleanup with gsap.context()
+
+#### Gap 8: Creative Arsenal Named Patterns
+- `references/interaction-library.md` expanded with 30+ named patterns
+- Organized by category: Navigation, Layout, Cards, Scroll, Gallery, Typography, Micro
+- Each pattern has a minimum motion tier requirement
+- Agents can reference patterns by name during Phase 5/6
+
+#### Gap 9: Bento Motion Engine Card Archetypes
+- Dashboard Addendum in SKILL.md expanded with 5 specific card archetypes:
+  - The Intelligent List, The Command Input, The Live Status,
+    The Wide Data Stream, The Contextual UI
+- Performance rules for perpetual dashboard animations
+
+#### Gap 10: Design Quality Gate in Phase 7
+- `phases/07-refine.md` expanded with comprehensive anti-slop audit checklist
+- Typography, Color, Layout, Content, Component, Code Quality, Strategic checks
+- Runs AFTER refinement loop, BEFORE promotion to production
+- Agent-E now runs this gate as final check before Orchestrator verification
+
+#### Agent Prompt Updates
+- All 6 agent prompts updated to v4.2 with new READ references
+- Orchestrator: loads anti-patterns + output-enforcement at pipeline start
+- Agent-A: dependency verification, responsive hardening, design quality gates
+- Agent-B: React/Next.js motion rules
+- Agent-C: 5-state mandate, Double-Bezel/Button-in-Button patterns, state completeness
+- Agent-D: output enforcement references
+- Agent-E: Design Quality Gate as final audit step
+
+#### Files Modified (13)
+- `SKILL.md` — Design slop + output enforcement + dependency verification + responsive
+  hardening + state mandate + bento archetypes added inline (self-containment rule)
+- `ROUTING.md` — New file references added
+- `CHANGELOG.md` — This entry
+- `references/anti-patterns.md` — Section II added (design slop AI tells)
+- `references/interaction-library.md` — High-end patterns + creative arsenal
+- `references/grid-rhythm.md` — Step 7 responsive hardening
+- `references/motion-budget.md` — React/Next.js motion rules
+- `phases/07-refine.md` — Design Quality Gate checklist
+- `agent-prompts/orchestrator.md` — v4.2 with new mandatory loads
+- `agent-prompts/agent-a-foundation.md` — dependency verification + responsive
+- `agent-prompts/agent-b-motion.md` — React motion rules
+- `agent-prompts/agent-c-ui.md` — state mandate + high-end patterns
+- `agent-prompts/agent-d-artifacts.md` — output enforcement
+- `agent-prompts/agent-e-qa.md` — Design Quality Gate
+
+#### Files Created (1)
+- `references/output-enforcement.md` — NEW
+
+---
+
 ## v4.0.0 — 2026-03-20
 
 ### Major: Video Integration + Full v3.1 Wiring + New Asset Engines

@@ -199,4 +199,116 @@ Orchestrator uses this to decide whether to spawn Agent-D (scroll sequences).
 
 ---
 
-*Iron Canvas v3 — references/motion-budget.md*
+## REACT / NEXT.JS MOTION RULES (v4.2)
+
+> When Iron Canvas encounters a React or Next.js project, these additional
+> rules prevent performance collapse. GSAP remains the primary motion engine,
+> but these rules govern how motion integrates with React's render cycle.
+
+### Framework Mixing Ban
+
+```
+CRITICAL: NEVER mix GSAP and Framer Motion in the same component tree.
+
+  GSAP — used for:
+    ✅ Isolated full-page scrolltelling
+    ✅ Canvas backgrounds and scroll sequences
+    ✅ ScrollTrigger-driven animations
+    ✅ Complex timeline choreography
+    Wrapped in strict useEffect cleanup blocks.
+
+  Framer Motion — used for:
+    ✅ UI component interactions (hover, tap, layout transitions)
+    ✅ Bento grid card animations (layoutId, staggerChildren)
+    ✅ AnimatePresence for mount/unmount transitions
+    ✅ Shared element transitions across state changes
+
+  DEFAULT TO GSAP for Iron Canvas builds (our pipeline is GSAP-native).
+  Framer Motion only when the project is React-first and client requests it.
+```
+
+### Performance Rules for React Motion
+
+```
+NEVER use React useState for:
+  → Magnetic hover effects (continuous mouse tracking)
+  → Continuous animations (infinite loops, breathing effects)
+  → Any animation updating faster than 60fps
+
+INSTEAD use:
+  → Framer Motion: useMotionValue + useTransform (outside render cycle)
+  → GSAP: gsap.to() targeting DOM refs directly
+  → CSS custom properties animated via JS (element.style.setProperty)
+
+WHY: useState triggers re-renders. At 60fps = 60 re-renders/second.
+This causes performance collapse on mobile. Motion values bypass React's
+render cycle entirely.
+```
+
+### Perpetual Motion Isolation
+
+```
+ANY perpetual motion or infinite loop animation MUST:
+  1. Be wrapped in React.memo to prevent parent re-renders
+  2. Live in its own microscopic Client Component
+  3. NEVER share state with parent layout
+  4. Use will-change: transform sparingly (only while actively animating)
+
+WRONG:
+  function Dashboard() {
+    // 60fps animation re-rendering the entire dashboard
+    const [pos, setPos] = useState({ x: 0, y: 0 });
+    useEffect(() => { /* animation loop setting pos */ });
+    return <div>{/* all dashboard content re-renders */}</div>
+  }
+
+RIGHT:
+  const PulseIndicator = React.memo(() => {
+    // Isolated — parent never re-renders
+    return <motion.div animate={{ scale: [1, 1.2, 1] }} />;
+  });
+```
+
+### Staggered Children Rules
+
+```
+For staggerChildren (Framer Motion):
+  → Parent (variants) and Children MUST reside in the SAME Client Component tree
+  → If data is fetched asynchronously, pass data as props into a centralized
+    Parent Motion wrapper — don't split across component boundaries
+  → Use AnimatePresence to wrap dynamic lists for enter/exit animations
+```
+
+### Scroll Reveal Performance
+
+```
+USE: IntersectionObserver or Framer Motion whileInView
+NEVER: window.addEventListener('scroll')
+
+window scroll listeners cause continuous reflows on every frame.
+IntersectionObserver fires only when elements cross threshold boundaries.
+
+For GSAP ScrollTrigger (Iron Canvas default):
+  → Lazy-init below fold
+  → Kill triggers on unmount (useEffect cleanup)
+  → Use scrub: 0.5 for smooth scroll-linked animations (not scrub: true)
+```
+
+### useEffect Cleanup (MANDATORY)
+
+```javascript
+// EVERY animation in a React component MUST have cleanup
+useEffect(() => {
+  const ctx = gsap.context(() => {
+    // All GSAP animations here
+    gsap.to('.element', { /* ... */ });
+    ScrollTrigger.create({ /* ... */ });
+  }, containerRef);
+
+  return () => ctx.revert(); // Kills ALL animations + ScrollTriggers
+}, []);
+```
+
+---
+
+*Iron Canvas v4.2 — references/motion-budget.md*

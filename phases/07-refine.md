@@ -111,6 +111,79 @@ box-shadow: 0 12px 40px rgba(var(--brand-rgb), 0.2);
 }
 ```
 
+## DESIGN QUALITY GATE (v4.2 — Anti-Slop Audit)
+
+> This gate catches common AI design mistakes before handoff.
+> Run this checklist AFTER the refinement loop, BEFORE promotion.
+> Derived from cross-industry design audit best practices.
+
+### Typography Audit
+- [ ] No browser default fonts (Arial, Helvetica alone) in production
+- [ ] Headlines have explicit letter-spacing (not default 0)
+- [ ] Line-height set for each type role (headings: 1.0-1.15, body: 1.6-1.8)
+- [ ] No orphan words in headings (text-wrap: balance applied)
+- [ ] Font weights include Medium (500) or SemiBold (600), not just 400/700
+- [ ] Body text max-width ≤ 65ch
+- [ ] No serif fonts in dashboard/software UIs
+- [ ] Font-display: swap on all @font-face declarations
+
+### Color & Surface Audit
+- [ ] No pure #000000 anywhere — off-black used
+- [ ] Accent colors desaturated (saturation < 80%)
+- [ ] One accent color maximum per project
+- [ ] No warm/cool gray fluctuation within same project
+- [ ] Shadows tinted to background hue — no default black shadows
+- [ ] No AI purple/blue neon gradient aesthetic
+- [ ] Grain/noise overlays on fixed pseudo-elements only — not scrolling containers
+
+### Layout Audit
+- [ ] No 3-column equal card feature rows (unless DNA Profile specifies)
+- [ ] Content constrained by max-width container (1200-1440px)
+- [ ] All layouts collapse gracefully to single column below 768px
+- [ ] No horizontal overflow on mobile
+- [ ] Touch targets ≥ 44px on all interactive elements
+- [ ] Cards exist only where elevation communicates hierarchy
+- [ ] Bottom padding optically larger than top where needed
+
+### Content Audit
+- [ ] No generic names (John Doe, Jane Smith, Acme Corp)
+- [ ] No fake round numbers (99.99%, 50%, $100.00)
+- [ ] No AI copywriting clichés (Elevate, Seamless, Unleash, Next-Gen)
+- [ ] No Lorem Ipsum anywhere
+- [ ] No broken Unsplash image links
+- [ ] Unique avatar for every distinct user
+- [ ] Blog/content dates are varied (not all identical)
+- [ ] Error messages are direct (no "Oops!" or exclamation marks)
+
+### Component Audit
+- [ ] All interactive elements have 5 states (default, hover, focus, active, disabled)
+- [ ] Loading states use skeletal loaders (not circular spinners)
+- [ ] Empty states include a CTA (invitation, not dead end)
+- [ ] Error states are inline with specific messages
+- [ ] Navigation has active/current page indicator
+- [ ] shadcn/ui customized (if used) — not in default state
+- [ ] Icon stroke widths standardized across project
+
+### Code Quality Audit
+- [ ] Semantic HTML used (<nav>, <main>, <article>, <section>)
+- [ ] No commented-out dead code
+- [ ] No inline styles mixed with CSS classes
+- [ ] All imports verified against package.json
+- [ ] Favicon included
+- [ ] Meta tags complete (title, description, og:image)
+- [ ] No hardcoded pixel widths for layout — relative units used
+- [ ] Alt text on all meaningful images (not just alt="" or alt="image")
+
+### Strategic Omissions Check
+- [ ] Privacy policy / Terms of service links in footer (if required)
+- [ ] No dead-end pages — every page has a way back
+- [ ] Custom 404 page (if applicable)
+- [ ] Form validation (client-side) on all forms
+- [ ] Skip-to-content link for keyboard users
+- [ ] scroll-behavior: smooth on html element
+
+---
+
 ## Phase 7 Completion Criteria
 
 - [ ] Full refinement loop completed (minimum 2 passes)
