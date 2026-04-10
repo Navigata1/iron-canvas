@@ -223,7 +223,8 @@ agent-prompts/agent-e-qa.md           Accessibility + performance + cross-browse
 
 REFERENCES/ — Technical deep dives (loaded when specifically needed)
 ──────────────────────────────────────────────────────────────
-references/anti-patterns.md           8 anti-patterns. Loaded at start of every run.
+references/anti-patterns.md           11 workflow anti-patterns + design slop AI tells. Loaded at start of every run.
+references/output-enforcement.md      Output completeness enforcement. Loaded by ALL agents. (NEW v4.2)
 references/scroll-engine.md           ★ Canvas + GSAP ScrollTrigger architecture
                                        LOAD THIS when scroll engine is planned.
 references/model-selection.md         ★ AI engine routing guide (Nano Banana, Leonardo,
@@ -421,8 +422,10 @@ curl -X POST https://cloud.leonardo.ai/api/rest/v1/blueprints/{id}/run \
 | Using Leonardo at all | `references/leonardo-blueprints.md` |
 | Before Agent-B runs | `references/expertise-injection.md` (GSAP + Lenis + Barba sections) |
 | Before Agent-D runs | `references/expertise-injection.md` (Nano Banana + Leonardo sections) |
-| Before Agent-E runs | `references/anti-patterns.md` |
-| Every phase start | `references/anti-patterns.md` (anti-pattern check) |
+| Before Agent-E runs | `references/anti-patterns.md` (Sections I + II) |
+| Before Agent-E runs | `references/output-enforcement.md` |
+| Every phase start | `references/anti-patterns.md` (anti-pattern + design slop check) |
+| Every phase start | `references/output-enforcement.md` (completeness check) |
 | Three.js planned | `references/expertise-injection.md` (Three.js section) |
 | TTS/audio planned | `references/expertise-injection.md` (AudioContext section) |
 
