@@ -103,11 +103,49 @@ Document each:
 
 **Rule:** If a reference evokes ANY of the anti-feelings listed in the Feel Profile — discard it immediately, regardless of how technically impressive it is.
 
+### Top-3 Synthesis Requirement (MANDATORY)
+
+Do not stop at collecting references.
+
+From the 3-5 references you scout, identify the **top 3 strongest fits** for this exact project. Then explicitly extract the best qualities of each one and combine them into a single synthesis target.
+
+This means:
+- Reference 1 might contribute the layout structure.
+- Reference 2 might contribute the motion language.
+- Reference 3 might contribute the typography, density, or conversion hierarchy.
+
+The North Star is **not** a remix of one site. It is a deliberate synthesis of the strongest traits from the best 3 references, filtered through the project's own DNA, emotional target, and business goal.
+
+Before generating the North Star image, write a short synthesis summary:
+
+```json
+{
+  "top_3_reference_synthesis": [
+    {
+      "reference_url": "https://...",
+      "take": "Specific trait to preserve",
+      "role": "layout / motion / typography / conversion / visual tone"
+    }
+  ],
+  "combined_direction": "One paragraph describing the final synthesized visual target before image generation."
+}
+```
+
+This synthesis summary is the bridge between raw research and image generation.
+It should make it obvious **why** the final North Star looks the way it does.
+
 ---
 
 ## Step 3: North Star Image Generation
 
 The North Star Image synthesizes all scouted references into ONE image generated specifically for this project. It is the visual "what we are aiming for" — shown to the client, used by every Build Agent as a reference during execution.
+
+The prompt must be built from:
+1. the site's DNA,
+2. the Feel Profile,
+3. and the **top-3 reference synthesis** captured above.
+
+In other words, you are not prompting from imagination alone. You are generating a project-specific reference image from researched best-in-class traits, intentionally merged into one applicable design target.
 
 ### AI Engine Selection
 
